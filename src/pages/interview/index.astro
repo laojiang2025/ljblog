@@ -1,0 +1,124 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { DIRECTIONS, DIFFICULTIES } from '../../content.config';
+import '../../styles/interview.css';
+
+const entries = (await getCollection('interview')).filter((entry) => !entry.data.draft);
+
+// 列表页直接内联参考答案，题量不大时比逐题跳详情页更好用
+const questions = await Promise.all(
+	entries.map(async (entry) => ({ entry, Content: (await render(entry)).Content })),
+);
+
+questions.sort((a, b) => {
+	const byDirection =
+		DIRECTIONS.indexOf(a.entry.data.direction) - DIRECTIONS.indexOf(b.entry.data.direction);
+	return byDirection !== 0
+		? byDirection
+		: DIFFICULTIES.indexOf(a.entry.data.difficulty) - DIFFICULTIES.indexOf(b.entry.data.difficulty);
+});
+
+const usedDirections = DIRECTIONS.filter((direction) =>
+	questions.some((item) => item.entry.data.direction === direction),
+);
+const usedDifficulties = DIFFICULTIES.filter((level) =>
+	questions.some((item) => item.entry.data.difficulty === level),
+);
+---
+
+<BaseLayout
+	title="面试题库"
+	description="按方向与难度沉淀的测试面试题，附参考答案与常见追问。"
+	pageKind="landing"
+>
+	<div class="qa">
+		<header class="qa__head">
+			<h1>面试题库</h1>
+			<p>
+				按方向与难度沉淀的题目，点开题干即可看参考答案与常见追问。目前共 {questions.length} 道，持续补充中。
+			</p>
+		</header>
+
+		<div class="qa-filters">
+			<div class="qa-filters__row">
+				<span class="qa-filters__label">方向</span>
+				<div class="qa-chips" data-filter-group="direction">
+					<button type="button" class="qa-chip" data-value="" aria-pressed="true">全部</button>
+					{
+						usedDirections.map((direction) => (
+							<button type="button" class="qa-chip" data-value={direction} aria-pressed="false">
+								{direction}
+							</button>
+						))
+					}
+				</div>
+			</div>
+
+			<div class="qa-filters__row">
+				<span class="qa-filters__label">难度</span>
+				<div class="qa-chips" data-filter-group="difficulty">
+					<button type="button" class="qa-chip" data-value="" aria-pressed="true">全部</button>
+					{
+						usedDifficulties.map((level) => (
+							<button type="button" class="qa-chip" data-value={level} aria-pressed="false">
+								{level}
+							</button>
+						))
+					}
+				</div>
+			</div>
+
+			<div class="qa-filters__row">
+				<label class="qa-filters__label" for="qa-search">搜索</label>
+				<input
+					id="qa-search"
+					type="search"
+					placeholder="按题干或标签搜索…"
+					autocomplete="off"
+				/>
+				<button type="button" class="qa-chip" data-qa-action="expand">全部展开</button>
+				<button type="button" class="qa-chip" data-qa-action="collapse">全部收起</button>
+			</div>
+		</div>
+
+		<p class="qa-count" id="qa-count" role="status" aria-live="polite"></p>
+
+		<ul class="qa-list">
+			{
+				questions.map(({ entry, Content }) => (
+					<li
+						class="qa-item"
+						data-direction={entry.data.direction}
+						data-difficulty={entry.data.difficulty}
+						data-keywords={`${entry.data.question} ${entry.data.tags.join(' ')}`.toLowerCase()}
+					>
+						<details>
+							<summary>
+								<span class="qa-item__meta">
+									<span class="qa-tag qa-tag--direction">{entry.data.direction}</span>
+									<span class={`qa-tag qa-tag--level-${DIFFICULTIES.indexOf(entry.data.difficulty)}`}>
+										{entry.data.difficulty}
+									</span>
+									{entry.data.tags.map((tag) => (
+										<span class="qa-tag">{tag}</span>
+									))}
+								</span>
+								<span class="qa-item__question">{entry.data.question}</span>
+							</summary>
+							<div class="qa-item__answer">
+								<Content />
+							</div>
+						</details>
+					</li>
+				))
+			}
+		</ul>
+
+		<p class="qa-empty" id="qa-empty" hidden>没有符合条件的题目。</p>
+	</div>
+</BaseLayout>
+
+<script>
+	import '../../scripts/interview.ts';
+</script>

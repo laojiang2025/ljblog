@@ -105,11 +105,14 @@ export const WORKSTATION_SECTIONS: readonly WorkstationSection[] = [
 			{
 				id: 'interview-bank',
 				name: '题库总览',
-				summary: '测试理论、自动化、性能、安全与项目复盘题目，按标签与难度检索。',
+				summary: '测试理论、自动化、性能与安全题目，按方向、难度与关键词筛选，附参考答案。',
 				icon: 'checklist',
-				access: 'planned',
-				tags: ['分类', '标签', '检索'],
-				note: '二期用内容集合建模，Markdown 写题、构建期生成检索索引',
+				access: 'site',
+				href: '/interview/',
+				tags: ['方向', '难度', '检索'],
+				featured: true,
+				short: '面试题库',
+				note: '用内容集合建模，Markdown 写题，新增题目直接放 src/content/interview/',
 			},
 			{
 				id: 'daily-question',
@@ -273,7 +276,7 @@ export interface NavItem {
 export const PRIMARY_NAV: readonly NavItem[] = [
 	{ id: 'home', label: '工作台', href: '/' },
 	{ id: 'tools', label: '测试工具', href: '/tools/' },
-	{ id: 'interview', label: '面试题', href: '/#interview' },
+	{ id: 'interview', label: '面试题', href: '/interview/' },
 	{ id: 'career', label: '求职', href: '/#career' },
 	{ id: 'learning', label: '学习', href: '/#learning' },
 	{ id: 'notes', label: '资料库', href: '/blog/' },

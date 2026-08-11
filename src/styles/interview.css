@@ -1,0 +1,241 @@
+/* 面试题库：列表 + 筛选，配色 token 取自 global.css */
+
+.qa {
+	max-width: 58rem;
+	margin: 0 auto;
+	padding: 2rem 1.25rem 3.5rem;
+}
+
+.qa__head h1 {
+	margin: 0 0 0.4rem;
+	font-family: var(--font-display);
+	font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+	font-weight: 650;
+	letter-spacing: -0.02em;
+}
+
+.qa__head p {
+	margin: 0 0 1.5rem;
+	max-width: 42rem;
+	color: var(--ink-soft);
+}
+
+/* ---------- 筛选 ---------- */
+
+.qa-filters {
+	display: flex;
+	flex-direction: column;
+	gap: 0.6rem;
+	padding: 0.9rem 1rem;
+	border: 1px solid var(--line);
+	border-radius: 13px;
+	background: var(--bg-elevated);
+}
+
+.qa-filters__row {
+	display: flex;
+	align-items: center;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+}
+
+.qa-filters__label {
+	flex: none;
+	width: 2.6rem;
+	font-size: 0.8rem;
+	color: var(--ink-soft);
+}
+
+.qa-chips {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+
+.qa-chip {
+	padding: 0.28rem 0.7rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--bg);
+	color: var(--ink-soft);
+	font-size: 0.82rem;
+	font-family: inherit;
+	cursor: pointer;
+}
+
+.qa-chip:hover {
+	color: var(--accent);
+	border-color: color-mix(in oklab, var(--accent) 45%, var(--line));
+}
+
+.qa-chip[aria-pressed='true'] {
+	background: var(--accent-soft);
+	border-color: color-mix(in oklab, var(--accent) 40%, var(--line));
+	color: var(--accent);
+	font-weight: 560;
+}
+
+.qa-filters input[type='search'] {
+	flex: 1 1 12rem;
+	min-width: 0;
+	padding: 0.35rem 0.7rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--bg);
+	color: var(--ink);
+	font-family: inherit;
+	font-size: 0.85rem;
+}
+
+.qa-count {
+	margin: 0.9rem 0 0.5rem;
+	font-size: 0.8rem;
+	color: var(--ink-soft);
+}
+
+/* ---------- 题目列表 ---------- */
+
+.qa-list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.55rem;
+}
+
+.qa-item {
+	border: 1px solid var(--line);
+	border-radius: 13px;
+	background: var(--bg-elevated);
+	overflow: hidden;
+}
+
+.qa-item summary {
+	display: flex;
+	flex-direction: column;
+	gap: 0.4rem;
+	padding: 0.85rem 1rem;
+	cursor: pointer;
+	list-style: none;
+}
+
+.qa-item summary::-webkit-details-marker {
+	display: none;
+}
+
+.qa-item summary:hover .qa-item__question {
+	color: var(--accent);
+}
+
+.qa-item__meta {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3rem;
+}
+
+.qa-item__question {
+	font-size: 0.98rem;
+	font-weight: 560;
+	line-height: 1.5;
+}
+
+.qa-item details[open] summary {
+	border-bottom: 1px solid var(--line);
+}
+
+.qa-tag {
+	padding: 0.05rem 0.45rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	font-size: 0.7rem;
+	font-weight: 400;
+	color: var(--ink-soft);
+	white-space: nowrap;
+}
+
+.qa-tag--direction {
+	border-color: color-mix(in oklab, var(--accent) 35%, var(--line));
+	background: var(--accent-soft);
+	color: var(--accent);
+}
+
+/* 难度用色阶表达，同时保留文字，不单靠颜色传达信息 */
+.qa-tag--level-0 {
+	border-color: color-mix(in oklab, #2a9d63 40%, var(--line));
+	color: #248554;
+}
+
+.qa-tag--level-1 {
+	border-color: color-mix(in oklab, #c1670c 40%, var(--line));
+	color: #b0600d;
+}
+
+.qa-tag--level-2 {
+	border-color: color-mix(in oklab, #d1495b 40%, var(--line));
+	color: #bf3f50;
+}
+
+/* ---------- 答案正文 ---------- */
+
+.qa-item__answer {
+	padding: 0.9rem 1rem 1.1rem;
+	font-size: 0.9rem;
+	line-height: 1.75;
+	color: var(--ink-soft);
+}
+
+.qa-item__answer > :first-child {
+	margin-top: 0;
+}
+
+.qa-item__answer > :last-child {
+	margin-bottom: 0;
+}
+
+.qa-item__answer strong {
+	color: var(--ink);
+}
+
+.qa-item__answer code {
+	padding: 0.05rem 0.3rem;
+	border-radius: 5px;
+	background: var(--bg);
+	font-family: var(--font-mono);
+	font-size: 0.84em;
+}
+
+.qa-item__answer table {
+	width: 100%;
+	border-collapse: collapse;
+	margin: 0.8rem 0;
+	font-size: 0.85rem;
+}
+
+.qa-item__answer th,
+.qa-item__answer td {
+	padding: 0.4rem 0.6rem;
+	border: 1px solid var(--line);
+	text-align: left;
+}
+
+.qa-item__answer th {
+	background: var(--bg);
+	font-weight: 560;
+	color: var(--ink);
+}
+
+.qa-item__answer ol,
+.qa-item__answer ul {
+	padding-left: 1.3rem;
+}
+
+.qa-item__answer li {
+	margin: 0.25rem 0;
+}
+
+.qa-empty {
+	margin: 1.5rem 0;
+	text-align: center;
+	color: var(--ink-soft);
+}

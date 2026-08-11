@@ -16,4 +16,20 @@ const blog = defineCollection({
 	}),
 });
 
-export const collections = { blog };
+export const DIRECTIONS = ['测试理论', '自动化', '性能', '安全', '工程效能'] as const;
+export const DIFFICULTIES = ['初级', '中级', '高级'] as const;
+
+const interview = defineCollection({
+	loader: glob({ base: './src/content/interview', pattern: '**/*.{md,mdx}' }),
+	schema: z.object({
+		/** 题干，列表页直接展示，正文写参考答案 */
+		question: z.string(),
+		direction: z.enum(DIRECTIONS),
+		difficulty: z.enum(DIFFICULTIES),
+		tags: z.array(z.string()).default([]),
+		updatedDate: z.coerce.date().optional(),
+		draft: z.boolean().default(false),
+	}),
+});
+
+export const collections = { blog, interview };
