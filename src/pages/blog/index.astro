@@ -12,7 +12,11 @@ const formatDate = (date: Date) =>
 	date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
 ---
 
-<BaseLayout title="资料库" description={`浏览 ${SITE.title} 的全部笔记与可下载资料。`}>
+<BaseLayout
+	title="资料库"
+	description={`浏览 ${SITE.title} 的全部笔记与可下载资料。`}
+	pageKind="landing"
+>
 	<div class="content-shell content-shell--wide">
 		<p class="page-kicker">Archive</p>
 		<h1 class="page-title">完整资料库</h1>

@@ -56,7 +56,13 @@ const formatDate = (date: Date) =>
 				LOCAL_SERVICES.map((service) => (
 					<li class="ws-service">
 						<span class="ws-service__name">{service.name}</span>
-						<code class="ws-service__addr">{service.url ?? '桌面端'}</code>
+						{service.url ? (
+							<a class="ws-service__addr" href={service.url}>
+								{service.url}
+							</a>
+						) : (
+							<span class="ws-service__tag">桌面端</span>
+						)}
 					</li>
 				))
 			}

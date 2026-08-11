@@ -329,14 +329,13 @@ body[data-page-kind='workstation'] .site-header__inner {
 	gap: 0.5rem;
 }
 
+/* 标题宁可折行也不截断：省略号会把"JobSearch 岗位聚合"砍成认不出的半截 */
 .ws-card__title {
 	margin: 0;
 	font-size: 0.95rem;
 	font-weight: 560;
 	min-width: 0;
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	line-height: 1.35;
 }
 
 .ws-card__link {
@@ -573,23 +572,36 @@ body[data-page-kind='workstation'] .site-header__inner {
 	text-decoration: none;
 }
 
+/* 名称与地址上下排：并排时长 URL 会把服务名挤成省略号，等于两边都读不全 */
 .ws-service {
 	display: flex;
-	align-items: baseline;
-	justify-content: space-between;
-	gap: 0.5rem;
+	flex-direction: column;
+	gap: 0.1rem;
 	font-size: 0.8rem;
 }
 
 .ws-service__name {
-	overflow: hidden;
-	text-overflow: ellipsis;
-	white-space: nowrap;
+	min-width: 0;
 }
 
 .ws-service__addr {
-	flex: none;
+	font-family: var(--font-mono);
 	font-size: 0.7rem;
+	color: var(--ink-soft);
+	text-decoration: none;
+	word-break: break-all;
+}
+
+.ws-service__addr:hover {
+	color: var(--accent);
+}
+
+.ws-service__tag {
+	align-self: flex-start;
+	padding: 0.05rem 0.4rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	font-size: 0.68rem;
 	color: var(--ink-soft);
 }
 
