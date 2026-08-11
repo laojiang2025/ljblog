@@ -480,7 +480,9 @@ body[data-page-kind='workstation'] .site-header__inner {
 }
 
 @media (max-width: 81.999rem) {
+	/* 三栏塌成两栏时它得独占整行，否则会掉进 10.5rem 的侧栏列里撑破页面 */
 	.ws-aside {
+		grid-column: 1 / -1;
 		display: grid;
 		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
 		align-items: start;

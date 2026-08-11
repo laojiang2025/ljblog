@@ -1,5 +1,7 @@
 # build output
 dist/
+# 本地渲染核对用的截图
+.shots/
 # generated types
 .astro/
 
