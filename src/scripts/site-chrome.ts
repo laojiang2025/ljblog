@@ -1,6 +1,6 @@
 /**
  * 站点壳交互：主题切换 + 移动端导航。
- * 独立于 SpatialHome，避免首页逻辑污染全站。
+ * 只管全站共有的头部行为，页面级逻辑各自持有，避免互相污染。
  */
 const THEME_KEY = 'theme';
 const DARK_MQ = '(prefers-color-scheme: dark)';

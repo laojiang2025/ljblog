@@ -20,8 +20,6 @@ npm run dev
 - `public/download/`：可下载笔记
 - `src/consts.ts`：品牌 / 关注渠道
 
-节点图已下线，`SpatialHome.astro`、`spatial-home.ts/css` 与 `consts.ts` 的 `HOME_NODES` 暂留但已无引用，待确认后清理。
-
 ## 构建
 
 ```bash

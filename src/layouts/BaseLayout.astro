@@ -9,7 +9,11 @@ import '../styles/site-footer.css';
 interface Props {
 	title?: string;
 	description?: string;
-	pageKind?: 'home' | 'content' | 'workstation';
+	/**
+	 * content 走 og:type=article，其余门户型页面走 website。
+	 * workstation 另有 body 选择器加宽头部，关于页不需要，故单列 landing。
+	 */
+	pageKind?: 'content' | 'workstation' | 'landing';
 }
 
 const {
@@ -34,7 +38,7 @@ const pageTitle = title === SITE.title ? `${SITE.title} | ${SITE.label}` : `${ti
 		<meta name="title" content={pageTitle} />
 		<meta name="description" content={description} />
 		<meta name="robots" content="index, follow, max-image-preview:large" />
-		<meta property="og:type" content={pageKind === 'home' ? 'website' : 'article'} />
+		<meta property="og:type" content={pageKind === 'content' ? 'article' : 'website'} />
 		<meta property="og:site_name" content={SITE.title} />
 		<meta property="og:locale" content="zh_CN" />
 		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />

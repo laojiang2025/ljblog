@@ -97,11 +97,6 @@ body {
 		var(--bg);
 }
 
-body.has-spatial-home {
-	overflow: hidden;
-	height: 100vh;
-}
-
 img {
 	max-width: 100%;
 	height: auto;
@@ -164,11 +159,6 @@ pre {
 	border-bottom: 1px solid var(--line);
 }
 
-body.has-spatial-home .site-header {
-	position: fixed;
-	inset: 0 0 auto 0;
-}
-
 .site-header__inner {
 	display: flex;
 	align-items: center;
@@ -177,10 +167,6 @@ body.has-spatial-home .site-header {
 	max-width: 72rem;
 	margin: 0 auto;
 	padding: 0.85rem 1.25rem;
-}
-
-body.has-spatial-home .site-header__inner {
-	max-width: none;
 }
 
 .site-brand {
@@ -305,11 +291,6 @@ html[data-theme='dark'] [data-theme-icon='moon'] {
 
 .site-main {
 	flex: 1;
-}
-
-body.has-spatial-home .site-main {
-	height: 100vh;
-	padding-top: 3.75rem;
 }
 
 .pattern-tag-list {
