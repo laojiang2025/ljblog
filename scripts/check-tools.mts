@@ -7,6 +7,15 @@
 import { formatJson, highlightJson, minifyJson, parseJson } from '../src/lib/tools/json.ts';
 import { breakdown, parseTimeInput } from '../src/lib/tools/time.ts';
 import { decode, parseUrl } from '../src/lib/tools/url.ts';
+import {
+	generatePeople,
+	idCardCheckCode,
+	luhnCheckDigit,
+	toCsv,
+	PERSON_FIELDS,
+} from '../src/lib/tools/person.ts';
+import { analyze, randomText, transform, truncate } from '../src/lib/tools/text.ts';
+import { diffLines } from '../src/lib/tools/diff.ts';
 
 let pass = 0;
 let fail = 0;
@@ -83,6 +92,95 @@ const bare = parseUrl('example.com/x');
 check('protocol-less gets https', bare.ok && bare.value.origin, 'https://example.com');
 check('empty rejected', parseUrl('  ').ok, false);
 check('bad escape rejected', decode('%E0%A4%A').ok, false);
+
+console.log('[person]');
+const people = generatePeople(50, PERSON_FIELDS);
+check('count', people.length, 50);
+check('count clamped to at least 1', generatePeople(0, ['name']).length, 1);
+check('only requested fields', Object.keys(generatePeople(1, ['name', 'phone'])[0]).sort(), [
+	'name',
+	'phone',
+]);
+check(
+	'id card checksum valid',
+	people.every((p) => idCardCheckCode(p.idCard!.slice(0, 17)) === p.idCard!.slice(17)),
+	true,
+);
+check(
+	'id card birthday matches field',
+	people.every((p) => p.idCard!.slice(6, 14) === p.birthday!.replace(/-/g, '')),
+	true,
+);
+check(
+	'id card gender digit matches field',
+	people.every((p) => (Number(p.idCard![16]) % 2 === 1 ? '男' : '女') === p.gender),
+	true,
+);
+check(
+	'bank card passes luhn',
+	people.every((p) => luhnCheckDigit(p.bankCard!.slice(0, -1)) === p.bankCard!.slice(-1)),
+	true,
+);
+check(
+	'bank card length 16-19',
+	people.every((p) => p.bankCard!.length >= 16 && p.bankCard!.length <= 19),
+	true,
+);
+check(
+	'phone is 11 digits',
+	people.every((p) => /^1\d{10}$/.test(p.phone!)),
+	true,
+);
+const csv = toCsv([{ name: 'a,b', address: 'has "quote"' }], ['name', 'address']);
+check('csv escapes comma and quote', csv.split('\n')[1], '"a,b","has ""quote"""');
+
+console.log('[text]');
+const stats = analyze('hello world\n\n你好 世界');
+check('chars counts code points', analyze('a😀').chars, 2);
+check('words mixes zh and en', stats.words, 6);
+check('paragraphs', stats.paragraphs, 2);
+check('bytes utf8', analyze('你好').bytes, 6);
+check('dedupe', transform('a\nb\na', 'dedupe'), 'a\nb');
+check('sortAsc', transform('c\na\nb', 'sortAsc'), 'a\nb\nc');
+check('removeEmptyLines', transform('a\n\n \nb', 'removeEmptyLines'), 'a\nb');
+check('numberLines pads', transform('x\ny', 'numberLines'), '1  x\n2  y');
+check('capitalize', transform('hello world', 'capitalize'), 'Hello World');
+check('truncate keeps emoji intact', truncate('😀😀😀', 2, ''), '😀😀');
+check('truncate no-op when short', truncate('abc', 10), 'abc');
+check('randomText length', [...randomText(20, { chinese: true, english: false, numbers: false, symbols: false })].length, 20);
+check(
+	'randomText empty pool',
+	randomText(10, { chinese: false, english: false, numbers: false, symbols: false }),
+	'',
+);
+
+console.log('[diff]');
+const same = diffLines('a\nb', 'a\nb');
+check('identical has no changes', [same.stats.added, same.stats.removed], [0, 0]);
+const changed = diffLines('a\nb\nc', 'a\nx\nc');
+check('one line replaced', [changed.stats.added, changed.stats.removed], [1, 1]);
+check(
+	'unchanged lines keep both numbers',
+	changed.rows.filter((r) => r.kind === 'equal').map((r) => [r.left, r.right]),
+	[
+		[1, 1],
+		[3, 3],
+	],
+);
+check('pure insert', diffLines('a\nc', 'a\nb\nc').stats, {
+	added: 1,
+	removed: 0,
+	equal: 2,
+	similarity: 2 / 3,
+});
+check('ignoreCase', diffLines('Abc', 'abc', { ignoreCase: true }).stats.added, 0);
+check('ignoreWhitespace', diffLines('a  b', 'a b', { ignoreWhitespace: true }).stats.added, 0);
+check('crlf normalized', diffLines('a\r\nb', 'a\nb').stats.added, 0);
+check(
+	'row order preserved',
+	diffLines('a\nb', 'b').rows.map((r) => r.kind),
+	['remove', 'equal'],
+);
 
 console.log(`\n${pass} passed, ${fail} failed`);
 process.exit(fail === 0 ? 0 : 1);

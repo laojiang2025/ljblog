@@ -41,23 +41,26 @@ export const TOOLS: readonly ToolMeta[] = [
 	{
 		id: 'person',
 		name: '人员数据生成',
-		summary: '批量生成姓名、身份证、手机号、银行卡等测试数据。',
+		summary: '批量生成姓名、身份证、手机号、银行卡等测试数据，校验位可用。',
 		icon: 'resume',
-		status: 'pending',
+		status: 'ready',
+		href: '/tools/person/',
 	},
 	{
 		id: 'text',
 		name: '文本处理',
-		summary: '大小写、去重、排序、统计与常见清洗操作。',
+		summary: '统计、大小写、去重、排序、清洗与随机文本生成。',
 		icon: 'book',
-		status: 'pending',
+		status: 'ready',
+		href: '/tools/text/',
 	},
 	{
 		id: 'diff',
 		name: '文本差异对比',
-		summary: '逐行比对两段文本，标出新增、删除与修改。',
+		summary: '逐行比对两段文本，标出新增与删除并给出相似度。',
 		icon: 'diff',
-		status: 'pending',
+		status: 'ready',
+		href: '/tools/diff/',
 	},
 ];
 

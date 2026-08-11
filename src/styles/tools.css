@@ -445,3 +445,134 @@ a.tool-nav__link:hover {
 	font-size: 0.78rem;
 	color: var(--ink-soft);
 }
+
+/* ---------- 勾选组与数字输入 ---------- */
+
+.tool-fieldset {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem 1rem;
+	margin: 0;
+	padding: 0.75rem 0.9rem;
+	border: 1px solid var(--line);
+	border-radius: 11px;
+	background: var(--bg-elevated);
+}
+
+.tool-fieldset legend {
+	padding: 0 0.35rem;
+	font-size: 0.8rem;
+	color: var(--ink-soft);
+}
+
+.tool-check {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	font-size: 0.84rem;
+	cursor: pointer;
+}
+
+.tool-check input {
+	accent-color: var(--accent);
+}
+
+.tool-inline input[type='number'] {
+	width: 5.5rem;
+	padding: 0.28rem 0.45rem;
+	border: 1px solid var(--line);
+	border-radius: 8px;
+	background: var(--bg-elevated);
+	color: var(--ink);
+	font-family: var(--font-mono);
+	font-size: 0.8rem;
+}
+
+/* ---------- 统计条 ---------- */
+
+.tool-stats {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(6rem, 1fr));
+	gap: 0.4rem;
+}
+
+.tool-stats li {
+	display: flex;
+	flex-direction: column;
+	gap: 0.1rem;
+	padding: 0.5rem 0.7rem;
+	border: 1px solid var(--line);
+	border-radius: 10px;
+	background: var(--bg-elevated);
+}
+
+.tool-stats__value {
+	font-family: var(--font-mono);
+	font-size: 1rem;
+	font-weight: 560;
+}
+
+.tool-stats__label {
+	font-size: 0.74rem;
+	color: var(--ink-soft);
+}
+
+/* ---------- 差异对比 ---------- */
+
+.tool-pair {
+	display: grid;
+	grid-template-columns: repeat(auto-fit, minmax(18rem, 1fr));
+	gap: 0.85rem;
+}
+
+.tool-diff {
+	border: 1px solid var(--line);
+	border-radius: 11px;
+	background: var(--bg-elevated);
+	overflow: auto;
+	max-height: 34rem;
+	font-family: var(--font-mono);
+	font-size: 0.8rem;
+	line-height: 1.65;
+}
+
+.tool-diff__row {
+	display: grid;
+	grid-template-columns: 3rem 3rem 1.2rem minmax(0, 1fr);
+	gap: 0.3rem;
+	padding: 0 0.5rem;
+	white-space: pre-wrap;
+	word-break: break-word;
+}
+
+.tool-diff__no {
+	text-align: right;
+	color: var(--ink-soft);
+	opacity: 0.7;
+	user-select: none;
+}
+
+.tool-diff__mark {
+	text-align: center;
+	user-select: none;
+}
+
+/* 不只靠颜色区分增删，符号列同时给出 +/-，色觉障碍下也能读 */
+.tool-diff__row--add {
+	background: color-mix(in oklab, #2a9d63 14%, transparent);
+}
+
+.tool-diff__row--remove {
+	background: color-mix(in oklab, #d1495b 14%, transparent);
+}
+
+.tool-diff__row--add .tool-diff__mark {
+	color: #1f7a4c;
+}
+
+.tool-diff__row--remove .tool-diff__mark {
+	color: #b03445;
+}

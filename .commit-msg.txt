@@ -1,0 +1,16 @@
+feat: finish the toolbox with person, text and diff tools
+
+Completes the migration of the six local testtool utilities.
+
+Generated identities are now self-consistent: the ID card carries a valid
+checksum and its embedded birth date and gender digit match the fields shown
+alongside it, which the original generator did not guarantee. Bank numbers pass
+Luhn and CSV export escapes commas and quotes.
+
+Diff uses an LCS pass over lines, but strips the common prefix and suffix first
+and caps the DP table at four million cells, falling back to a wholesale
+replacement beyond that so a large paste cannot freeze the tab. Added and
+removed rows are marked with +/- as well as colour, so the distinction survives
+colour blindness.
+
+Self-check now covers all six tools with 64 assertions.

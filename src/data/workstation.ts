@@ -66,7 +66,7 @@ export const WORKSTATION_SECTIONS: readonly WorkstationSection[] = [
 			{
 				id: 'devtools',
 				name: '测试工具集',
-				summary: 'JSON 格式化、时间戳转换、URL 解析已可用，人员数据生成等三件正在迁移。',
+				summary: 'JSON 格式化、时间戳、URL 解析、人员数据、文本处理、文本 Diff 六件套。',
 				icon: 'flask',
 				access: 'site',
 				href: '/tools/',

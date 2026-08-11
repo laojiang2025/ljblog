@@ -1,0 +1,51 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolShell from '../../components/tools/ToolShell.astro';
+import '../../styles/tools.css';
+---
+
+<BaseLayout
+	title="文本差异对比"
+	description="逐行比对两段文本，标出新增、删除与保持不变的行。"
+	pageKind="landing"
+>
+	<ToolShell
+		active="diff"
+		title="文本差异对比"
+		description="逐行比对两段文本，按最长公共子序列对齐，标出新增与删除。适合核对配置、日志与接口返回。"
+	>
+		<div class="tool-panel">
+			<div class="tool-pair">
+				<div class="tool-field">
+					<label for="diff-left">原文</label>
+					<textarea id="diff-left" rows="10" spellcheck="false" placeholder="粘贴原始文本…"
+					></textarea>
+				</div>
+				<div class="tool-field">
+					<label for="diff-right">新文</label>
+					<textarea id="diff-right" rows="10" spellcheck="false" placeholder="粘贴修改后的文本…"
+					></textarea>
+				</div>
+			</div>
+
+			<div class="tool-actions">
+				<button type="button" class="tool-btn tool-btn--primary" data-diff-action="compare">
+					对比
+				</button>
+				<button type="button" class="tool-btn" data-diff-action="swap">交换两侧</button>
+				<button type="button" class="tool-btn" data-diff-action="clear">清空</button>
+				<label class="tool-check"><input type="checkbox" data-diff-opt="ignoreCase" /><span>忽略大小写</span></label>
+				<label class="tool-check"><input type="checkbox" data-diff-opt="ignoreWhitespace" /><span>忽略空白差异</span></label>
+				<label class="tool-check"><input type="checkbox" data-diff-opt="ignoreEmptyLines" /><span>忽略空行</span></label>
+			</div>
+
+			<p class="tool-status" id="diff-status" role="status" aria-live="polite"></p>
+
+			<div class="tool-diff" id="diff-output" hidden></div>
+		</div>
+	</ToolShell>
+</BaseLayout>
+
+<script>
+	import '../../scripts/tools/diff.ts';
+</script>

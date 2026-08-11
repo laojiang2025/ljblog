@@ -1,0 +1,94 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolShell from '../../components/tools/ToolShell.astro';
+import { OPERATION_LABELS } from '../../lib/tools/text';
+import '../../styles/tools.css';
+
+const STATS = [
+	{ id: 'chars', label: '字符' },
+	{ id: 'charsNoSpace', label: '不含空白' },
+	{ id: 'words', label: '词数' },
+	{ id: 'lines', label: '行数' },
+	{ id: 'paragraphs', label: '段落' },
+	{ id: 'chinese', label: '汉字' },
+	{ id: 'bytes', label: 'UTF-8 字节' },
+];
+
+const OPERATIONS = Object.entries(OPERATION_LABELS);
+---
+
+<BaseLayout
+	title="文本处理"
+	description="文本统计、大小写、去重、排序、清洗与随机文本生成。"
+	pageKind="landing"
+>
+	<ToolShell
+		active="text"
+		title="文本处理"
+		description="边输入边统计，常用的清洗与整理操作一键完成。所有处理都在本地进行。"
+	>
+		<div class="tool-panel">
+			<div class="tool-field">
+				<label for="text-input">文本</label>
+				<textarea id="text-input" rows="10" spellcheck="false" placeholder="在这里粘贴文本…"
+				></textarea>
+			</div>
+
+			<ul class="tool-stats" id="text-stats">
+				{
+					STATS.map((item) => (
+						<li>
+							<span class="tool-stats__value" id={`stat-${item.id}`}>
+								0
+							</span>
+							<span class="tool-stats__label">{item.label}</span>
+						</li>
+					))
+				}
+			</ul>
+
+			<div class="tool-actions">
+				{
+					OPERATIONS.map(([id, label]) => (
+						<button type="button" class="tool-btn" data-text-op={id}>
+							{label}
+						</button>
+					))
+				}
+			</div>
+
+			<div class="tool-actions">
+				<label class="tool-inline">
+					截断到
+					<input id="text-truncate" type="number" min="1" value="100" />
+					字
+				</label>
+				<button type="button" class="tool-btn" data-text-action="truncate">截断</button>
+				<label class="tool-inline">
+					随机生成
+					<input id="text-random-count" type="number" min="1" max="5000" value="100" />
+					字
+				</label>
+				<label class="tool-check"><input type="checkbox" data-pool="chinese" checked /><span>中文</span></label>
+				<label class="tool-check"><input type="checkbox" data-pool="english" checked /><span>英文</span></label>
+				<label class="tool-check"><input type="checkbox" data-pool="numbers" checked /><span>数字</span></label>
+				<label class="tool-check"><input type="checkbox" data-pool="symbols" /><span>符号</span></label>
+				<button type="button" class="tool-btn" data-text-action="random">生成</button>
+			</div>
+
+			<div class="tool-actions">
+				<button type="button" class="tool-btn tool-btn--primary" data-text-action="copy">
+					复制文本
+				</button>
+				<button type="button" class="tool-btn" data-text-action="undo">撤销上一步</button>
+				<button type="button" class="tool-btn" data-text-action="clear">清空</button>
+			</div>
+
+			<p class="tool-status" id="text-status" role="status" aria-live="polite"></p>
+		</div>
+	</ToolShell>
+</BaseLayout>
+
+<script>
+	import '../../scripts/tools/text.ts';
+</script>

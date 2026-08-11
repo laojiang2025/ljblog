@@ -5,6 +5,7 @@ import { TOOLS } from '../../data/tools';
 import '../../styles/tools.css';
 
 const ready = TOOLS.filter((tool) => tool.status === 'ready').length;
+const pending = TOOLS.length - ready;
 ---
 
 <BaseLayout
@@ -16,8 +17,9 @@ const ready = TOOLS.filter((tool) => tool.status === 'ready').length;
 		<header class="tool-index__head">
 			<h1>测试工具箱</h1>
 			<p>
-				日常测试用得上的小工具，全部在浏览器本地运行，输入内容不会离开你的电脑。目前 {ready} 个可用，其余正从本地
-				testtool 陆续迁移。
+				日常测试用得上的 {TOOLS.length} 个小工具，全部在浏览器本地运行，输入内容不会离开你的电脑。{
+					pending > 0 && `其中 ${ready} 个已可用，其余正陆续迁移。`
+				}
 			</p>
 		</header>
 
