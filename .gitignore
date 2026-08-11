@@ -2,6 +2,8 @@
 dist/
 # 本地渲染核对用的截图
 .shots/
+# 提交信息草稿
+.commit-msg.txt
 # generated types
 .astro/
 
