@@ -1,0 +1,53 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { TOOLS } from '../../data/tools';
+import '../../styles/tools.css';
+
+const ready = TOOLS.filter((tool) => tool.status === 'ready').length;
+---
+
+<BaseLayout
+	title="测试工具箱"
+	description="纯前端的日常测试辅助工具，全部在浏览器本地运行，不上传任何数据。"
+	pageKind="landing"
+>
+	<div class="tool-index">
+		<header class="tool-index__head">
+			<h1>测试工具箱</h1>
+			<p>
+				日常测试用得上的小工具，全部在浏览器本地运行，输入内容不会离开你的电脑。目前 {ready} 个可用，其余正从本地
+				testtool 陆续迁移。
+			</p>
+		</header>
+
+		<div class="tool-index__grid">
+			{
+				TOOLS.map((tool) => {
+					const body = (
+						<>
+							<span class="tool-card__icon">
+								<Icon name={tool.icon} />
+							</span>
+							<span class="tool-card__body">
+								<span class="tool-card__title">{tool.name}</span>
+								<span class="tool-card__desc">{tool.summary}</span>
+							</span>
+						</>
+					);
+
+					return tool.href ? (
+						<a class="tool-card" href={tool.href}>
+							{body}
+						</a>
+					) : (
+						<div class="tool-card tool-card--pending">
+							{body}
+							<span class="tool-card__tag">迁移中</span>
+						</div>
+					);
+				})
+			}
+		</div>
+	</div>
+</BaseLayout>

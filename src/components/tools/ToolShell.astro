@@ -1,0 +1,52 @@
+---
+import Icon from '../Icon.astro';
+import { TOOLS } from '../../data/tools';
+
+interface Props {
+	active: string;
+	title: string;
+	description: string;
+}
+
+const { active, title, description } = Astro.props;
+---
+
+<div class="tool">
+	<aside class="tool-nav" aria-label="工具箱导航">
+		<p class="tool-nav__label">测试工具箱</p>
+		<ul>
+			{
+				TOOLS.map((tool) =>
+					tool.href ? (
+						<li>
+							<a
+								class="tool-nav__link"
+								href={tool.href}
+								aria-current={tool.id === active ? 'page' : undefined}
+							>
+								<Icon name={tool.icon} />
+								<span>{tool.name}</span>
+							</a>
+						</li>
+					) : (
+						<li>
+							<span class="tool-nav__link tool-nav__link--pending" title="仍在从本地工具迁移">
+								<Icon name={tool.icon} />
+								<span>{tool.name}</span>
+								<span class="tool-nav__tag">迁移中</span>
+							</span>
+						</li>
+					),
+				)
+			}
+		</ul>
+	</aside>
+
+	<div class="tool__main">
+		<header class="tool__head">
+			<h1>{title}</h1>
+			<p>{description}</p>
+		</header>
+		<slot />
+	</div>
+</div>

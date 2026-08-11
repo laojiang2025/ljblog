@@ -29,6 +29,8 @@ export const ICONS = {
 	copy: '<rect x="9" y="9" width="11.5" height="11.5" rx="2"/><path d="M5.5 15.5H4.5a1 1 0 0 1-1-1V4.5a1 1 0 0 1 1-1H14a1 1 0 0 1 1 1v1"/>',
 	arrowUp: '<path d="M12 19.5V5"/><path d="m6 11 6-6 6 6"/>',
 	mail: '<rect x="3" y="5" width="18" height="14" rx="2.2"/><path d="m3.8 6.5 8.2 6 8.2-6"/>',
+	link: '<path d="M10.5 13.5a4 4 0 0 0 5.7 0l3-3a4 4 0 0 0-5.7-5.7l-1.7 1.7"/><path d="M13.5 10.5a4 4 0 0 0-5.7 0l-3 3a4 4 0 0 0 5.7 5.7l1.7-1.7"/>',
+	diff: '<path d="M6.5 3.5v13"/><circle cx="6.5" cy="19" r="2"/><circle cx="6.5" cy="3.5" r="0.01"/><path d="M17.5 20.5v-13"/><circle cx="17.5" cy="5" r="2"/><path d="M6.5 5.5c0 4 11 2 11 6"/>',
 } as const;
 
 export type IconName = keyof typeof ICONS;

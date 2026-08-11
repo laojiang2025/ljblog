@@ -1,0 +1,75 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import ToolShell from '../../components/tools/ToolShell.astro';
+import '../../styles/tools.css';
+
+const FIELDS = [
+	{ id: 'seconds', label: '秒级时间戳' },
+	{ id: 'milliseconds', label: '毫秒级时间戳' },
+	{ id: 'local', label: '本地时间' },
+	{ id: 'iso', label: 'ISO 8601' },
+	{ id: 'utc', label: 'UTC' },
+	{ id: 'weekday', label: '星期' },
+	{ id: 'relative', label: '相对现在' },
+];
+---
+
+<BaseLayout
+	title="时间戳转换"
+	description="秒与毫秒时间戳、日期字符串双向转换，含相对时间。"
+	pageKind="landing"
+>
+	<ToolShell
+		active="timestamp"
+		title="时间戳转换"
+		description="输入时间戳或日期字符串都行，10 位按秒、13 位按毫秒识别。转换结果按你所在时区计算。"
+	>
+		<div class="tool-panel">
+			<div class="tool-field">
+				<label for="time-input">时间戳或日期</label>
+				<input
+					id="time-input"
+					type="text"
+					spellcheck="false"
+					autocomplete="off"
+					placeholder="1767225600 / 1767225600000 / 2026-01-01 12:00:00"
+				/>
+			</div>
+
+			<div class="tool-actions">
+				<button type="button" class="tool-btn tool-btn--primary" data-time-action="convert">
+					转换
+				</button>
+				<button type="button" class="tool-btn" data-time-action="now">用当前时间</button>
+				<button type="button" class="tool-btn" data-time-action="clear">清空</button>
+			</div>
+
+			<p class="tool-status" id="time-status" role="status" aria-live="polite"></p>
+
+			<dl class="tool-result">
+				{
+					FIELDS.map((field) => (
+						<div class="tool-result__row">
+							<dt>{field.label}</dt>
+							<dd>
+								<output id={`time-${field.id}`}>—</output>
+								<button
+									type="button"
+									class="tool-btn tool-btn--mini"
+									data-time-copy={field.id}
+									aria-label={`复制${field.label}`}
+								>
+									复制
+								</button>
+							</dd>
+						</div>
+					))
+				}
+			</dl>
+		</div>
+	</ToolShell>
+</BaseLayout>
+
+<script>
+	import '../../scripts/tools/timestamp.ts';
+</script>

@@ -66,11 +66,14 @@ export const WORKSTATION_SECTIONS: readonly WorkstationSection[] = [
 			{
 				id: 'devtools',
 				name: '测试工具集',
-				summary: '人员数据生成、文本处理、JSON 格式化、URL 解析、文本 Diff、时间戳转换六件套。',
+				summary: 'JSON 格式化、时间戳转换、URL 解析已可用，人员数据生成等三件正在迁移。',
 				icon: 'flask',
-				access: 'planned',
-				tags: ['原生 JS', '零依赖'],
-				note: '源自本地 testtool，纯客户端实现，二期整体内联进本站',
+				access: 'site',
+				href: '/tools/',
+				tags: ['零依赖', '本地运行'],
+				featured: true,
+				short: '工具箱',
+				note: '源自本地 testtool，逻辑全部在浏览器执行，输入不出本机',
 			},
 			{
 				id: 'case-viz',
@@ -266,10 +269,10 @@ export interface NavItem {
 	href: string;
 }
 
-/** 顶部栏目导航；分区页尚未拆出独立路由前，先指向首页锚点，二期只需改这里的 href */
+/** 顶部栏目导航；尚未拆出独立路由的分区先指向首页锚点，落地后改这里的 href 即可 */
 export const PRIMARY_NAV: readonly NavItem[] = [
 	{ id: 'home', label: '工作台', href: '/' },
-	{ id: 'tools', label: '测试工具', href: '/#tools' },
+	{ id: 'tools', label: '测试工具', href: '/tools/' },
 	{ id: 'interview', label: '面试题', href: '/#interview' },
 	{ id: 'career', label: '求职', href: '/#career' },
 	{ id: 'learning', label: '学习', href: '/#learning' },
