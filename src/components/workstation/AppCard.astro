@@ -1,0 +1,77 @@
+---
+import Icon from '../Icon.astro';
+import { ACCESS_META, type WorkstationCard } from '../../data/workstation';
+
+interface Props {
+	card: WorkstationCard;
+}
+
+const { card } = Astro.props;
+const meta = ACCESS_META[card.access];
+const isSite = card.access === 'site' && Boolean(card.href);
+// 紧凑布局下标签只留前两个，再多会把卡片撑乱；完整标签留给二期的筛选功能
+const tags = card.tags?.slice(0, 2) ?? [];
+---
+
+<article class="ws-card" data-access={card.access} id={`card-${card.id}`}>
+	<span class="ws-card__icon"><Icon name={card.icon} /></span>
+
+	<div class="ws-card__body">
+		<div class="ws-card__row">
+			<h3 class="ws-card__title">
+				{
+					isSite ? (
+						<a class="ws-card__link" href={card.href}>
+							{card.name}
+						</a>
+					) : (
+						card.name
+					)
+				}
+			</h3>
+			<span class="ws-card__badge" title={meta.hint}>{meta.label}</span>
+		</div>
+
+		<p class="ws-card__summary">{card.summary}</p>
+
+		{
+			tags.length > 0 && (
+				<ul class="ws-card__tags">
+					{tags.map((tag) => (
+						<li>{tag}</li>
+					))}
+				</ul>
+			)
+		}
+
+		{
+			card.access === 'local' && card.local && (
+				<div class="ws-card__local">
+					{card.local.url ? (
+						<a
+							class="ws-card__addr"
+							href={card.local.url}
+							title="仅在本机启动该服务后可访问"
+							rel="nofollow noopener"
+						>
+							{card.local.url}
+						</a>
+					) : (
+						<span class="ws-card__addr ws-card__addr--plain">桌面端应用</span>
+					)}
+					<button
+						type="button"
+						class="ws-card__copy"
+						data-copy={card.local.command}
+						aria-label={`复制 ${card.name} 的启动命令`}
+					>
+						<Icon name="copy" />
+						<span>复制命令</span>
+					</button>
+				</div>
+			)
+		}
+
+		{card.access === 'planned' && card.note && <p class="ws-card__note">{card.note}</p>}
+	</div>
+</article>

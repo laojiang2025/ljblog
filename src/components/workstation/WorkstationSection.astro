@@ -1,0 +1,26 @@
+---
+import AppCard from './AppCard.astro';
+import Icon from '../Icon.astro';
+import type { WorkstationSection } from '../../data/workstation';
+
+interface Props {
+	section: WorkstationSection;
+}
+
+const { section } = Astro.props;
+const titleId = `${section.id}-title`;
+---
+
+<section class="ws-section" id={section.id} aria-labelledby={titleId} data-accent={section.accent}>
+	<header class="ws-section__head">
+		<span class="ws-section__icon"><Icon name={section.icon} /></span>
+		<div class="ws-section__meta">
+			<h2 class="ws-section__title" id={titleId}>{section.title}</h2>
+			<p class="ws-section__desc">{section.description}</p>
+		</div>
+		<span class="ws-section__count">{section.cards.length} 项</span>
+	</header>
+	<div class="ws-section__grid">
+		{section.cards.map((card) => <AppCard card={card} />)}
+	</div>
+</section>

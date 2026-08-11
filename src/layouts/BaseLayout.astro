@@ -1,0 +1,82 @@
+---
+import { ClientRouter } from 'astro:transitions';
+import { SITE } from '../consts';
+import SiteHeader from '../components/SiteHeader.astro';
+import SiteFooter from '../components/SiteFooter.astro';
+import '../styles/global.css';
+import '../styles/site-footer.css';
+
+interface Props {
+	title?: string;
+	description?: string;
+	pageKind?: 'home' | 'content' | 'workstation';
+}
+
+const {
+	title = SITE.title,
+	description = SITE.description,
+	pageKind = 'content',
+} = Astro.props;
+
+const pageTitle = title === SITE.title ? `${SITE.title} | ${SITE.label}` : `${title} | ${SITE.title}`;
+---
+
+<!doctype html>
+<html lang={SITE.locale} data-theme="light">
+	<head>
+		<meta charset="utf-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1" />
+		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+		<link rel="alternate" type="application/rss+xml" title={SITE.title} href="/rss.xml" />
+		<meta name="generator" content={Astro.generator} />
+		<link rel="canonical" href={new URL(Astro.url.pathname, Astro.site).href} />
+		<title>{pageTitle}</title>
+		<meta name="title" content={pageTitle} />
+		<meta name="description" content={description} />
+		<meta name="robots" content="index, follow, max-image-preview:large" />
+		<meta property="og:type" content={pageKind === 'home' ? 'website' : 'article'} />
+		<meta property="og:site_name" content={SITE.title} />
+		<meta property="og:locale" content="zh_CN" />
+		<meta property="og:url" content={new URL(Astro.url.pathname, Astro.site).href} />
+		<meta property="og:title" content={pageTitle} />
+		<meta property="og:description" content={description} />
+		<meta name="twitter:card" content="summary_large_image" />
+		<meta name="twitter:title" content={pageTitle} />
+		<meta name="twitter:description" content={description} />
+		<link rel="preconnect" href="https://fonts.googleapis.com" />
+		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link
+			href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,500;9..144,650&family=IBM+Plex+Sans:wght@400;500;560&family=IBM+Plex+Mono:wght@400;500&display=swap"
+			rel="stylesheet"
+		/>
+		<script is:inline>
+			(() => {
+				let storedTheme = null;
+				try {
+					const value = localStorage.getItem('theme');
+					storedTheme = value === 'light' || value === 'dark' ? value : null;
+				} catch {}
+				const theme =
+					storedTheme ??
+					(window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light');
+				document.documentElement.dataset.theme = theme;
+				document.documentElement.style.colorScheme = theme;
+			})();
+		</script>
+		<ClientRouter />
+		<slot name="head" />
+	</head>
+	<body class="site-body" data-page-kind={pageKind}>
+		<a class="skip-link" href="#main-content">跳到主要内容</a>
+		<div class="site-shell">
+			<SiteHeader />
+			<main id="main-content" class="site-main" tabindex="-1">
+				<slot />
+			</main>
+			<SiteFooter />
+		</div>
+		<script>
+			import '../scripts/site-chrome.ts';
+		</script>
+	</body>
+</html>

@@ -1,0 +1,344 @@
+:root {
+	/* 冷石纸面 + 墨青强调，避开紫渐变 / 奶油陶土 / 大报版式 */
+	--bg: #eef1f4;
+	--bg-elevated: #f7f8fa;
+	--ink: #15202b;
+	--ink-soft: #3d4f5f;
+	--line: color-mix(in oklab, var(--ink) 12%, transparent);
+	--accent: #0f766e;
+	--accent-soft: color-mix(in oklab, var(--accent) 14%, white);
+	--danger: #b42318;
+	--radius: 18px;
+	--font-display: 'Fraunces', 'Songti SC', 'Noto Serif SC', serif;
+	--font-sans: 'IBM Plex Sans', 'PingFang SC', 'Noto Sans SC', sans-serif;
+	--font-mono: 'IBM Plex Mono', 'SF Mono', ui-monospace, monospace;
+	--shadow-node: 0 1px 0 color-mix(in oklab, var(--ink) 6%, transparent);
+	/* 本机服务的状态色，冷石纸面里唯一的暖色，用于和"可直接访问"区分 */
+	--ws-warn: #a16207;
+	--ws-warn-soft: color-mix(in oklab, #a16207 12%, white);
+	color-scheme: light;
+}
+
+html[data-theme='dark'] {
+	--bg: #0d1218;
+	--bg-elevated: #151c24;
+	--ink: #e8eef4;
+	--ink-soft: #9aafc0;
+	--line: color-mix(in oklab, var(--ink) 14%, transparent);
+	--accent: #2dd4bf;
+	--accent-soft: color-mix(in oklab, var(--accent) 16%, black);
+	--shadow-node: 0 0 0 1px color-mix(in oklab, var(--ink) 8%, transparent);
+	--ws-warn: #e0b23c;
+	--ws-warn-soft: color-mix(in oklab, #e0b23c 16%, black);
+	color-scheme: dark;
+}
+
+/*
+ * 分区主题色：工作台宫格与节点图共用同一套色相，两处配色永远一致。
+ * 只定义色相本身，深浅背景与描边都由 color-mix 派生。
+ */
+[data-accent='blue'] {
+	--sec: #2563eb;
+}
+[data-accent='violet'] {
+	--sec: #7c3aed;
+}
+[data-accent='amber'] {
+	--sec: #d97706;
+}
+[data-accent='green'] {
+	--sec: #059669;
+}
+[data-accent='cyan'] {
+	--sec: #0891b2;
+}
+
+html[data-theme='dark'] [data-accent='blue'] {
+	--sec: #6ea8fe;
+}
+html[data-theme='dark'] [data-accent='violet'] {
+	--sec: #a78bfa;
+}
+html[data-theme='dark'] [data-accent='amber'] {
+	--sec: #f0b429;
+}
+html[data-theme='dark'] [data-accent='green'] {
+	--sec: #34d399;
+}
+html[data-theme='dark'] [data-accent='cyan'] {
+	--sec: #38bdf8;
+}
+
+[data-accent] {
+	--sec-soft: color-mix(in oklab, var(--sec) 14%, var(--bg-elevated));
+	--sec-line: color-mix(in oklab, var(--sec) 38%, transparent);
+}
+
+*,
+*::before,
+*::after {
+	box-sizing: border-box;
+}
+
+html {
+	scroll-behavior: smooth;
+}
+
+body {
+	margin: 0;
+	min-height: 100vh;
+	font-family: var(--font-sans);
+	font-size: 1rem;
+	line-height: 1.6;
+	color: var(--ink);
+	background:
+		radial-gradient(1200px 600px at 10% -10%, color-mix(in oklab, var(--accent) 10%, transparent), transparent 60%),
+		radial-gradient(900px 500px at 90% 0%, color-mix(in oklab, var(--ink) 5%, transparent), transparent 55%),
+		var(--bg);
+}
+
+body.has-spatial-home {
+	overflow: hidden;
+	height: 100vh;
+}
+
+img {
+	max-width: 100%;
+	height: auto;
+}
+
+a {
+	color: inherit;
+	text-decoration-thickness: 1px;
+	text-underline-offset: 0.18em;
+}
+
+a:hover {
+	color: var(--accent);
+}
+
+code,
+pre {
+	font-family: var(--font-mono);
+}
+
+.sr-only {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.skip-link {
+	position: absolute;
+	left: 1rem;
+	top: -3rem;
+	z-index: 100;
+	padding: 0.5rem 0.85rem;
+	border-radius: 999px;
+	background: var(--ink);
+	color: var(--bg);
+}
+
+.skip-link:focus {
+	top: 1rem;
+}
+
+.site-shell {
+	min-height: 100vh;
+	display: flex;
+	flex-direction: column;
+}
+
+.site-header {
+	position: sticky;
+	top: 0;
+	z-index: 40;
+	backdrop-filter: blur(12px);
+	background: color-mix(in oklab, var(--bg) 82%, transparent);
+	border-bottom: 1px solid var(--line);
+}
+
+body.has-spatial-home .site-header {
+	position: fixed;
+	inset: 0 0 auto 0;
+}
+
+.site-header__inner {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	gap: 1rem;
+	max-width: 72rem;
+	margin: 0 auto;
+	padding: 0.85rem 1.25rem;
+}
+
+body.has-spatial-home .site-header__inner {
+	max-width: none;
+}
+
+.site-brand {
+	display: inline-flex;
+	align-items: baseline;
+	gap: 0.55rem;
+	text-decoration: none;
+}
+
+.site-brand__name {
+	font-family: var(--font-display);
+	font-weight: 650;
+	font-size: 1.35rem;
+	letter-spacing: -0.03em;
+}
+
+.site-brand__label {
+	color: var(--ink-soft);
+	font-size: 0.92rem;
+}
+
+.site-header__controls {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.site-nav__list {
+	display: none;
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	gap: 0.25rem;
+}
+
+@media (min-width: 48rem) {
+	.site-nav__list {
+		display: flex;
+	}
+}
+
+.site-nav__link {
+	display: inline-flex;
+	align-items: center;
+	min-height: 2.25rem;
+	padding: 0 0.75rem;
+	border-radius: 999px;
+	text-decoration: none;
+	color: var(--ink-soft);
+}
+
+/* 栏目变多后，桌面窄区间收紧间距，避免与品牌区互相挤压 */
+@media (min-width: 48rem) and (max-width: 66rem) {
+	.site-nav__link {
+		padding: 0 0.5rem;
+		font-size: 0.9rem;
+	}
+}
+
+.site-nav__link[aria-current='page'],
+.site-nav__link:hover {
+	color: var(--ink);
+	background: var(--accent-soft);
+}
+
+.site-control {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.4rem;
+	height: 2.4rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--bg-elevated);
+	color: var(--ink);
+	cursor: pointer;
+}
+
+.site-control svg {
+	width: 1.1rem;
+	height: 1.1rem;
+}
+
+html[data-theme='light'] [data-theme-icon='sun'],
+html[data-theme='dark'] [data-theme-icon='moon'] {
+	display: none;
+}
+
+.mobile-nav {
+	border: none;
+	border-radius: 1.25rem;
+	padding: 0;
+	width: min(22rem, calc(100vw - 2rem));
+	background: var(--bg-elevated);
+	color: var(--ink);
+	box-shadow: var(--shadow-node);
+}
+
+.mobile-nav::backdrop {
+	background: color-mix(in oklab, black 45%, transparent);
+}
+
+.mobile-nav__header {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+	padding: 1rem 1rem 0.5rem;
+}
+
+.mobile-nav__list {
+	list-style: none;
+	margin: 0;
+	padding: 0.5rem 1rem 1.25rem;
+}
+
+.mobile-nav__link {
+	display: block;
+	padding: 0.85rem 0.4rem;
+	text-decoration: none;
+	border-bottom: 1px solid var(--line);
+}
+
+.site-main {
+	flex: 1;
+}
+
+body.has-spatial-home .site-main {
+	height: 100vh;
+	padding-top: 3.75rem;
+}
+
+.pattern-tag-list {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.45rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.pattern-tag-list li {
+	padding: 0.28rem 0.65rem;
+	border-radius: 999px;
+	border: 1px solid var(--line);
+	background: color-mix(in oklab, var(--bg) 70%, transparent);
+	font-size: 0.82rem;
+	color: var(--ink-soft);
+}
+
+.pattern-action-link {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35rem;
+	color: var(--accent);
+	font-weight: 560;
+	text-decoration: none;
+}
+
+.pattern-action-link:hover {
+	text-decoration: underline;
+}

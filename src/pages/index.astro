@@ -1,0 +1,61 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../layouts/BaseLayout.astro';
+import WorkstationSidebar from '../components/workstation/WorkstationSidebar.astro';
+import WorkstationSection from '../components/workstation/WorkstationSection.astro';
+import WorkstationAside from '../components/workstation/WorkstationAside.astro';
+import FloatingDock from '../components/workstation/FloatingDock.astro';
+import { WORKSTATION_SECTIONS, WORKSTATION_STATS } from '../data/workstation';
+import { SITE } from '../consts';
+import '../styles/workstation.css';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const description = '个人工作站：测试工具、面试题库、求职工作台与学习资料的统一入口。';
+---
+
+<BaseLayout title={SITE.title} description={description} pageKind="workstation">
+	<div class="ws">
+		<WorkstationSidebar />
+
+		<div class="ws__main">
+			<section class="ws-hero" aria-labelledby="ws-hero-title">
+				<p class="ws-hero__eyebrow">个人工作站</p>
+				<h1 class="ws-hero__title" id="ws-hero-title">工具、题库与笔记，收进同一个入口</h1>
+				<p class="ws-hero__desc">
+					{description}跑在本机的应用只提供入口与启动方式，站内内容随时可读。
+				</p>
+				<ul class="ws-hero__stats">
+					<li>
+						<span class="ws-hero__num">{WORKSTATION_STATS.total}</span>
+						<span class="ws-hero__cap">项收录</span>
+					</li>
+					<li>
+						<span class="ws-hero__num">{WORKSTATION_STATS.live}</span>
+						<span class="ws-hero__cap">项已可用</span>
+					</li>
+					<li>
+						<span class="ws-hero__num">{WORKSTATION_STATS.sections}</span>
+						<span class="ws-hero__cap">个分区</span>
+					</li>
+					<li>
+						<span class="ws-hero__num">{posts.length}</span>
+						<span class="ws-hero__cap">篇笔记</span>
+					</li>
+				</ul>
+			</section>
+
+			{WORKSTATION_SECTIONS.map((section) => <WorkstationSection section={section} />)}
+		</div>
+
+		<WorkstationAside posts={posts} />
+	</div>
+
+	<FloatingDock />
+</BaseLayout>
+
+<script>
+	import '../scripts/workstation.ts';
+</script>

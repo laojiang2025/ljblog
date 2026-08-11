@@ -1,0 +1,51 @@
+---
+import { getCollection, render } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import '../../styles/content.css';
+
+export async function getStaticPaths() {
+	const posts = await getCollection('blog', ({ data }) => !data.draft);
+	return posts.map((post) => ({
+		params: { slug: post.id },
+		props: { post },
+	}));
+}
+
+const { post } = Astro.props;
+const { Content } = await render(post);
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title={post.data.title} description={post.data.description}>
+	<article class="content-shell">
+		<header class="article-header">
+			<p class="page-kicker">资料</p>
+			<h1 class="page-title">{post.data.title}</h1>
+			<p class="page-lead">{post.data.description}</p>
+			<div class="article-meta">
+				<span>
+					发布于
+					<time datetime={post.data.pubDate.toISOString()}>
+						{formatDate(post.data.pubDate)}
+					</time>
+				</span>
+				{
+					post.data.download && (
+						<a
+							class="article-download"
+							href={`/download/${post.data.download}`}
+							download={post.data.download}
+						>
+							下载笔记
+						</a>
+					)
+				}
+			</div>
+		</header>
+		<div class="article-prose">
+			<Content />
+		</div>
+	</article>
+</BaseLayout>

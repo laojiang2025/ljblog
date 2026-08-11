@@ -1,0 +1,656 @@
+/* 工作台：门户布局。配色 token 统一定义在 global.css，此处只管布局与组件 */
+
+body[data-page-kind='workstation'] .site-header__inner {
+	max-width: 84rem;
+}
+
+.ws {
+	max-width: 84rem;
+	margin: 0 auto;
+	padding: 1.25rem 1.25rem 4rem;
+	display: grid;
+	grid-template-columns: minmax(0, 1fr);
+	gap: 1.5rem;
+}
+
+@media (min-width: 60rem) {
+	.ws {
+		grid-template-columns: 10.5rem minmax(0, 1fr);
+		align-items: start;
+	}
+}
+
+@media (min-width: 82rem) {
+	.ws {
+		grid-template-columns: 10.5rem minmax(0, 1fr) 16.5rem;
+	}
+}
+
+.ws__main {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1.5rem;
+}
+
+/* ---------- 左侧常用直达 ---------- */
+
+/*
+ * 窄屏不隐藏侧栏，只把它重排成横向胶囊摆在主内容上方。
+ * 侧栏藏着常用直达，宽度不够就整块消失等于把入口弄丢了。
+ */
+.ws-side {
+	display: block;
+}
+
+@media (min-width: 60rem) {
+	.ws-side {
+		position: sticky;
+		top: 5rem;
+	}
+}
+
+@media (max-width: 59.999rem) {
+	.ws-side__list {
+		flex-direction: row;
+		flex-wrap: wrap;
+		gap: 0.4rem;
+	}
+
+	.ws-side__link {
+		border-color: var(--line);
+		background: var(--bg-elevated);
+	}
+}
+
+.ws-side__label {
+	margin: 0 0 0.5rem;
+	padding-left: 0.55rem;
+	font-size: 0.75rem;
+	letter-spacing: 0.1em;
+	color: var(--ink-soft);
+}
+
+.ws-side__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.ws-side__link {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+	padding: 0.4rem 0.5rem;
+	border-radius: 10px;
+	color: var(--ink-soft);
+	text-decoration: none;
+	font-size: 0.88rem;
+	border: 1px solid transparent;
+}
+
+.ws-side__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 1.75rem;
+	height: 1.75rem;
+	flex: none;
+	border-radius: 8px;
+	background: var(--sec-soft);
+	color: var(--sec);
+}
+
+.ws-side__icon svg {
+	width: 0.95rem;
+	height: 0.95rem;
+}
+
+.ws-side__text {
+	flex: 1;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ws-side__dot {
+	flex: none;
+	width: 0.4rem;
+	height: 0.4rem;
+	border-radius: 50%;
+	background: var(--ws-warn);
+}
+
+.ws-side__link:hover {
+	color: var(--ink);
+	background: var(--sec-soft);
+	border-color: var(--sec-line);
+}
+
+/* ---------- 顶部概览 ---------- */
+
+.ws-hero {
+	padding: 1.15rem 1.35rem;
+	border: 1px solid var(--line);
+	border-radius: var(--radius);
+	background:
+		linear-gradient(135deg, color-mix(in oklab, var(--accent) 9%, transparent), transparent 60%),
+		var(--bg-elevated);
+}
+
+.ws-hero__eyebrow {
+	margin: 0 0 0.35rem;
+	font-size: 0.75rem;
+	letter-spacing: 0.12em;
+	text-transform: uppercase;
+	color: var(--accent);
+}
+
+.ws-hero__title {
+	margin: 0 0 0.4rem;
+	font-family: var(--font-display);
+	font-weight: 650;
+	font-size: clamp(1.35rem, 1.05rem + 1.2vw, 1.8rem);
+	line-height: 1.25;
+	letter-spacing: -0.02em;
+}
+
+.ws-hero__desc {
+	margin: 0;
+	max-width: 46rem;
+	font-size: 0.88rem;
+	color: var(--ink-soft);
+}
+
+.ws-hero__stats {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.5rem;
+	margin: 0.9rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ws-hero__stats li {
+	display: flex;
+	align-items: baseline;
+	gap: 0.3rem;
+	padding: 0.25rem 0.65rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: color-mix(in oklab, var(--bg) 55%, transparent);
+}
+
+.ws-hero__num {
+	font-family: var(--font-display);
+	font-size: 1.05rem;
+	font-weight: 650;
+	line-height: 1;
+	font-variant-numeric: tabular-nums;
+}
+
+.ws-hero__cap {
+	font-size: 0.78rem;
+	color: var(--ink-soft);
+}
+
+/* ---------- 分区 ---------- */
+
+.ws-section {
+	scroll-margin-top: 5rem;
+}
+
+.ws-section__head {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	margin-bottom: 0.75rem;
+}
+
+.ws-section__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2rem;
+	height: 2rem;
+	flex: none;
+	border-radius: 10px;
+	background: var(--sec-soft);
+	color: var(--sec);
+}
+
+.ws-section__icon svg {
+	width: 1.1rem;
+	height: 1.1rem;
+}
+
+.ws-section__meta {
+	flex: 1;
+	min-width: 0;
+}
+
+.ws-section__title {
+	margin: 0;
+	font-family: var(--font-display);
+	font-size: 1.1rem;
+	font-weight: 650;
+	letter-spacing: -0.01em;
+}
+
+.ws-section__desc {
+	margin: 0.05rem 0 0;
+	font-size: 0.82rem;
+	color: var(--ink-soft);
+}
+
+.ws-section__count {
+	flex: none;
+	font-size: 0.74rem;
+	color: var(--sec);
+	padding: 0.15rem 0.55rem;
+	border-radius: 999px;
+	background: var(--sec-soft);
+}
+
+.ws-section__grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(15.5rem, 1fr));
+	gap: 0.7rem;
+}
+
+/* ---------- 卡片 ---------- */
+
+.ws-card {
+	position: relative;
+	display: grid;
+	grid-template-columns: auto minmax(0, 1fr);
+	gap: 0.7rem;
+	padding: 0.8rem 0.9rem;
+	border: 1px solid var(--line);
+	border-radius: 13px;
+	background: var(--bg-elevated);
+	transition:
+		border-color 0.16s ease,
+		box-shadow 0.16s ease,
+		transform 0.16s ease;
+}
+
+.ws-card:hover {
+	border-color: var(--sec-line);
+	box-shadow: 0 4px 16px color-mix(in oklab, var(--sec) 14%, transparent);
+	transform: translateY(-1px);
+}
+
+.ws-card[data-access='planned'] {
+	background: color-mix(in oklab, var(--bg-elevated) 55%, transparent);
+}
+
+.ws-card[data-access='planned']:hover {
+	transform: none;
+	box-shadow: none;
+}
+
+.ws-card__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.3rem;
+	height: 2.3rem;
+	border-radius: 11px;
+	background: var(--sec-soft);
+	color: var(--sec);
+}
+
+.ws-card__icon svg {
+	width: 1.2rem;
+	height: 1.2rem;
+}
+
+.ws-card[data-access='planned'] .ws-card__icon {
+	background: color-mix(in oklab, var(--ink) 7%, transparent);
+	color: var(--ink-soft);
+}
+
+.ws-card__body {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.28rem;
+}
+
+.ws-card__row {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.5rem;
+}
+
+.ws-card__title {
+	margin: 0;
+	font-size: 0.95rem;
+	font-weight: 560;
+	min-width: 0;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ws-card__link {
+	text-decoration: none;
+}
+
+/* 整卡可点：链接热区铺满卡片，同时不遮挡卡片内其他控件 */
+.ws-card__link::after {
+	content: '';
+	position: absolute;
+	inset: 0;
+	border-radius: inherit;
+}
+
+.ws-card__badge {
+	flex: none;
+	font-size: 0.68rem;
+	padding: 0.1rem 0.4rem;
+	border-radius: 5px;
+	white-space: nowrap;
+	background: var(--sec-soft);
+	color: var(--sec);
+	cursor: help;
+}
+
+.ws-card[data-access='local'] .ws-card__badge {
+	background: var(--ws-warn-soft);
+	color: var(--ws-warn);
+}
+
+.ws-card[data-access='planned'] .ws-card__badge {
+	background: color-mix(in oklab, var(--ink) 7%, transparent);
+	color: var(--ink-soft);
+}
+
+.ws-card__summary {
+	margin: 0;
+	font-size: 0.8rem;
+	line-height: 1.5;
+	color: var(--ink-soft);
+	display: -webkit-box;
+	-webkit-box-orient: vertical;
+	-webkit-line-clamp: 2;
+	line-clamp: 2;
+	overflow: hidden;
+}
+
+.ws-card__tags {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.3rem;
+	margin: 0.05rem 0 0;
+	padding: 0;
+	list-style: none;
+}
+
+.ws-card__tags li {
+	font-size: 0.68rem;
+	padding: 0.08rem 0.35rem;
+	border-radius: 5px;
+	color: var(--ink-soft);
+	background: color-mix(in oklab, var(--ink) 6%, transparent);
+}
+
+.ws-card__local {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: center;
+	gap: 0.4rem;
+	margin-top: 0.15rem;
+}
+
+.ws-card__addr {
+	font-family: var(--font-mono);
+	font-size: 0.72rem;
+	color: var(--ink-soft);
+	text-decoration: none;
+	border-bottom: 1px dashed var(--line);
+}
+
+.ws-card__addr:hover {
+	color: var(--sec);
+}
+
+.ws-card__addr--plain {
+	border-bottom: none;
+}
+
+.ws-card__copy {
+	position: relative;
+	display: inline-flex;
+	align-items: center;
+	gap: 0.25rem;
+	padding: 0.2rem 0.5rem;
+	font-size: 0.72rem;
+	font-family: inherit;
+	color: var(--ink-soft);
+	background: transparent;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	cursor: pointer;
+}
+
+.ws-card__copy svg {
+	width: 0.85rem;
+	height: 0.85rem;
+}
+
+.ws-card__copy:hover {
+	color: var(--ink);
+	border-color: var(--sec-line);
+}
+
+.ws-card__copy[data-state='done'] {
+	color: var(--accent);
+	border-color: var(--accent);
+}
+
+.ws-card__copy[data-state='fail'] {
+	color: var(--danger);
+	border-color: var(--danger);
+}
+
+.ws-card__note {
+	margin: 0.1rem 0 0;
+	font-size: 0.72rem;
+	line-height: 1.45;
+	color: color-mix(in oklab, var(--ink-soft) 80%, transparent);
+}
+
+/* ---------- 右侧信息流 ---------- */
+
+/*
+ * 同理，窄屏下右侧信息流落到主内容下方继续显示，绝不整块隐藏——
+ * 关注渠道、最近更新、本机服务速查都在这里，藏掉等于入口消失。
+ */
+.ws-aside {
+	display: flex;
+	flex-direction: column;
+	gap: 0.85rem;
+}
+
+@media (max-width: 81.999rem) {
+	.ws-aside {
+		display: grid;
+		grid-template-columns: repeat(auto-fit, minmax(15rem, 1fr));
+		align-items: start;
+	}
+}
+
+@media (min-width: 82rem) {
+	.ws-aside {
+		position: sticky;
+		top: 5rem;
+		max-height: calc(100vh - 6.5rem);
+		overflow-y: auto;
+		scrollbar-width: thin;
+	}
+}
+
+.ws-panel {
+	padding: 0.8rem 0.9rem;
+	border: 1px solid var(--line);
+	border-radius: 13px;
+	background: var(--bg-elevated);
+}
+
+.ws-panel__title {
+	display: flex;
+	align-items: center;
+	gap: 0.4rem;
+	margin: 0 0 0.55rem;
+	font-size: 0.88rem;
+	font-weight: 560;
+}
+
+.ws-panel__title svg {
+	width: 0.95rem;
+	height: 0.95rem;
+	color: var(--accent);
+}
+
+.ws-panel__hint,
+.ws-panel__empty {
+	margin: 0 0 0.45rem;
+	font-size: 0.74rem;
+	color: var(--ink-soft);
+}
+
+.ws-panel__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+}
+
+.ws-panel__list--inline {
+	flex-direction: row;
+	flex-wrap: wrap;
+	gap: 0.35rem;
+}
+
+.ws-recent {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.5rem;
+	font-size: 0.82rem;
+}
+
+.ws-recent a {
+	text-decoration: none;
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ws-recent time {
+	flex: none;
+	font-size: 0.72rem;
+	color: var(--ink-soft);
+	font-variant-numeric: tabular-nums;
+}
+
+.ws-panel__more {
+	display: inline-block;
+	margin-top: 0.6rem;
+	font-size: 0.78rem;
+	color: var(--accent);
+	text-decoration: none;
+}
+
+.ws-service {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 0.5rem;
+	font-size: 0.8rem;
+}
+
+.ws-service__name {
+	overflow: hidden;
+	text-overflow: ellipsis;
+	white-space: nowrap;
+}
+
+.ws-service__addr {
+	flex: none;
+	font-size: 0.7rem;
+	color: var(--ink-soft);
+}
+
+.ws-chip {
+	display: inline-block;
+	padding: 0.2rem 0.55rem;
+	font-size: 0.76rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	text-decoration: none;
+	color: var(--ink-soft);
+}
+
+.ws-chip:hover {
+	border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+}
+
+/* ---------- 右下悬浮 ---------- */
+
+.ws-dock {
+	position: fixed;
+	right: 1rem;
+	bottom: 1.25rem;
+	z-index: 30;
+	display: flex;
+	flex-direction: column;
+	gap: 0.45rem;
+}
+
+.ws-dock__btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.4rem;
+	height: 2.4rem;
+	border: 1px solid var(--line);
+	border-radius: 999px;
+	background: var(--bg-elevated);
+	color: var(--ink-soft);
+	cursor: pointer;
+	box-shadow: 0 6px 18px color-mix(in oklab, var(--ink) 12%, transparent);
+}
+
+.ws-dock__btn svg {
+	width: 1.05rem;
+	height: 1.05rem;
+}
+
+.ws-dock__btn:hover {
+	color: var(--accent);
+	border-color: color-mix(in oklab, var(--accent) 45%, transparent);
+}
+
+.ws-dock__btn[hidden] {
+	display: none;
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.ws-card {
+		transition: none;
+	}
+
+	.ws-card:hover {
+		transform: none;
+	}
+}

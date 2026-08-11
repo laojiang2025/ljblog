@@ -1,0 +1,22 @@
+---
+import Icon from '../Icon.astro';
+---
+
+<div class="ws-dock" data-ws-dock>
+	<a class="ws-dock__btn" href="/about/" title="关于我与关注渠道" aria-label="关于我与关注渠道">
+		<Icon name="mail" />
+	</a>
+	<a class="ws-dock__btn" href="/rss.xml" title="RSS 订阅" aria-label="RSS 订阅">
+		<Icon name="rss" />
+	</a>
+	<button
+		type="button"
+		class="ws-dock__btn ws-dock__btn--top"
+		data-scroll-top
+		title="回到顶部"
+		aria-label="回到顶部"
+		hidden
+	>
+		<Icon name="arrowUp" />
+	</button>
+</div>

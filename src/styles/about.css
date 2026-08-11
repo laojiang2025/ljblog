@@ -1,0 +1,202 @@
+/* 关于页：常规纵向阅读布局，配色 token 全部取自 global.css */
+
+.about {
+	max-width: 52rem;
+	margin: 0 auto;
+	padding: 2rem 1.25rem 3.5rem;
+	display: flex;
+	flex-direction: column;
+	gap: 2rem;
+}
+
+.about-hero {
+	display: flex;
+	flex-wrap: wrap;
+	align-items: flex-start;
+	gap: 1.25rem;
+}
+
+.about-hero__portrait {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 4.5rem;
+	height: 4.5rem;
+	flex: none;
+	border-radius: 20px;
+	background: var(--accent-soft);
+	color: var(--accent);
+	font-family: var(--font-display);
+	font-size: 1.5rem;
+	font-weight: 650;
+	letter-spacing: 0.02em;
+}
+
+.about-hero__copy {
+	flex: 1;
+	min-width: 15rem;
+}
+
+.about-hero h1 {
+	margin: 0 0 0.3rem;
+	font-family: var(--font-display);
+	font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
+	font-weight: 650;
+	letter-spacing: -0.02em;
+}
+
+.about-hero__role {
+	margin: 0 0 0.5rem;
+	color: var(--accent);
+	font-size: 0.92rem;
+}
+
+.about-hero__desc {
+	margin: 0 0 0.75rem;
+	color: var(--ink-soft);
+}
+
+.about-block {
+	padding-top: 1.5rem;
+	border-top: 1px solid var(--line);
+}
+
+.about-block__head {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+}
+
+.about-block h2 {
+	margin: 0 0 0.4rem;
+	font-family: var(--font-display);
+	font-size: 1.15rem;
+	font-weight: 650;
+}
+
+.about-block__hint {
+	margin: 0 0 0.9rem;
+	font-size: 0.85rem;
+	color: var(--ink-soft);
+}
+
+/* 关注渠道与页脚样式在 site-footer.css，全站共用 */
+
+.channel-list[data-variant='full'] {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(13rem, 1fr));
+}
+
+/* ---------- 分区概览 ---------- */
+
+.about-grid {
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(15rem, 1fr));
+	gap: 0.7rem;
+}
+
+.about-card {
+	display: flex;
+	align-items: flex-start;
+	gap: 0.7rem;
+	padding: 0.85rem;
+	border: 1px solid var(--line);
+	border-radius: 13px;
+	background: var(--bg-elevated);
+	text-decoration: none;
+	color: inherit;
+}
+
+.about-card:hover {
+	border-color: var(--sec-line);
+	color: inherit;
+}
+
+.about-card__icon {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.2rem;
+	height: 2.2rem;
+	flex: none;
+	border-radius: 11px;
+	background: var(--sec-soft);
+	color: var(--sec);
+}
+
+.about-card__icon svg {
+	width: 1.15rem;
+	height: 1.15rem;
+}
+
+.about-card__body {
+	min-width: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+}
+
+.about-card__title {
+	font-weight: 560;
+	font-size: 0.95rem;
+}
+
+.about-card__desc {
+	font-size: 0.8rem;
+	line-height: 1.5;
+	color: var(--ink-soft);
+}
+
+.about-card__count {
+	font-size: 0.72rem;
+	color: var(--sec);
+}
+
+/* ---------- 最新笔记 ---------- */
+
+.about-posts {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: flex;
+	flex-direction: column;
+}
+
+.about-posts li {
+	display: flex;
+	align-items: baseline;
+	justify-content: space-between;
+	gap: 1rem;
+	padding: 0.75rem 0;
+	border-bottom: 1px solid var(--line);
+}
+
+.about-posts li:last-child {
+	border-bottom: 0;
+}
+
+.about-posts a {
+	display: flex;
+	flex-direction: column;
+	gap: 0.15rem;
+	min-width: 0;
+	text-decoration: none;
+}
+
+.about-posts__title {
+	font-weight: 560;
+}
+
+.about-posts__desc {
+	font-size: 0.82rem;
+	color: var(--ink-soft);
+}
+
+.about-posts time {
+	flex: none;
+	font-size: 0.78rem;
+	color: var(--ink-soft);
+	font-variant-numeric: tabular-nums;
+}
+

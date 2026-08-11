@@ -1,0 +1,83 @@
+---
+import type { CollectionEntry } from 'astro:content';
+import Icon from '../Icon.astro';
+import { LOCAL_SERVICES } from '../../data/workstation';
+import { SITE } from '../../consts';
+
+interface Props {
+	posts: CollectionEntry<'blog'>[];
+}
+
+const { posts } = Astro.props;
+const recent = posts.slice(0, 5);
+// 微信等仅有面板的渠道没有可跳转地址，侧栏只展示能直接打开的
+const channels = SITE.channels.filter(
+	(channel): channel is Extract<(typeof SITE.channels)[number], { href: string }> =>
+		'href' in channel,
+);
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('zh-CN', { month: '2-digit', day: '2-digit' });
+---
+
+<aside class="ws-aside" aria-label="站点动态与常用入口">
+	<section class="ws-panel">
+		<h2 class="ws-panel__title">
+			<Icon name="clock" />
+			最近更新
+		</h2>
+		{
+			recent.length > 0 ? (
+				<ul class="ws-panel__list">
+					{recent.map((post) => (
+						<li class="ws-recent">
+							<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+							<time datetime={post.data.pubDate.toISOString()}>
+								{formatDate(post.data.pubDate)}
+							</time>
+						</li>
+					))}
+				</ul>
+			) : (
+				<p class="ws-panel__empty">还没有发布的笔记。</p>
+			)
+		}
+		<a class="ws-panel__more" href="/blog/">查看全部资料</a>
+	</section>
+
+	<section class="ws-panel">
+		<h2 class="ws-panel__title">
+			<Icon name="terminal" />
+			本机服务速查
+		</h2>
+		<p class="ws-panel__hint">以下服务运行在本机，异地访问不可达。</p>
+		<ul class="ws-panel__list">
+			{
+				LOCAL_SERVICES.map((service) => (
+					<li class="ws-service">
+						<span class="ws-service__name">{service.name}</span>
+						<code class="ws-service__addr">{service.url ?? '桌面端'}</code>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+
+	<section class="ws-panel">
+		<h2 class="ws-panel__title">
+			<Icon name="compass" />
+			关注渠道
+		</h2>
+		<ul class="ws-panel__list ws-panel__list--inline">
+			{
+				channels.map((channel) => (
+					<li>
+						<a class="ws-chip" href={channel.href} rel="noopener">
+							{channel.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</section>
+</aside>

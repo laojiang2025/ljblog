@@ -1,0 +1,78 @@
+---
+import { getCollection } from 'astro:content';
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import { SITE } from '../../consts';
+import '../../styles/content.css';
+
+const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
+	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
+);
+
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'long', day: 'numeric' });
+---
+
+<BaseLayout title="资料库" description={`浏览 ${SITE.title} 的全部笔记与可下载资料。`}>
+	<div class="content-shell content-shell--wide">
+		<p class="page-kicker">Archive</p>
+		<h1 class="page-title">完整资料库</h1>
+		<p class="page-lead">共 {posts.length} 条资料。支持标题与摘要即时过滤。</p>
+
+		<div class="archive-search">
+			<label class="sr-only" for="archive-query">搜索资料</label>
+			<input
+				id="archive-query"
+				type="search"
+				placeholder="搜索标题或摘要…"
+				data-archive-query
+				autocomplete="off"
+			/>
+		</div>
+
+		<div class="archive-list" data-archive-list>
+			{
+				posts.map((post) => (
+					<article
+						class="archive-card"
+						data-archive-item
+						data-search={`${post.data.title} ${post.data.description} ${post.data.tags.join(' ')}`}
+					>
+						<div class="archive-card__meta">
+							<span>资料</span>
+							<time datetime={post.data.pubDate.toISOString()}>
+								{formatDate(post.data.pubDate)}
+							</time>
+							{post.data.tags.slice(0, 3).map((tag) => (
+								<span class="tag-pill">{tag}</span>
+							))}
+						</div>
+						<h2>
+							<a href={`/blog/${post.id}/`}>{post.data.title}</a>
+						</h2>
+						<p>{post.data.description}</p>
+					</article>
+				))
+			}
+		</div>
+	</div>
+</BaseLayout>
+
+<script>
+	function bindArchiveSearch() {
+		const input = document.querySelector<HTMLInputElement>('[data-archive-query]');
+		const items = [...document.querySelectorAll<HTMLElement>('[data-archive-item]')];
+		if (!input) return;
+
+		const filter = () => {
+			const q = input.value.trim().toLowerCase();
+			items.forEach((item) => {
+				const hay = (item.dataset.search ?? '').toLowerCase();
+				item.hidden = q.length > 0 && !hay.includes(q);
+			});
+		};
+
+		input.addEventListener('input', filter);
+	}
+
+	document.addEventListener('astro:page-load', bindArchiveSearch);
+</script>

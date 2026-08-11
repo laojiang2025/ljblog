@@ -1,0 +1,130 @@
+---
+import { SITE } from '../consts';
+import { PRIMARY_NAV } from '../data/workstation';
+
+const pathname = Astro.url.pathname;
+const links = PRIMARY_NAV;
+
+/**
+ * 指向首页锚点的栏目不参与高亮——它们的选中态由工作台侧边栏在滚动时接管，
+ * 顶部再跟着变会出现两处同时闪烁。
+ */
+const isCurrent = (href: string) => {
+	if (href.includes('#')) return false;
+	if (href === '/') return pathname === '/';
+	return pathname.startsWith(href);
+};
+---
+
+<header class="site-header" data-site-header>
+	<div class="site-header__inner">
+		<a class="site-brand" href="/" aria-label={`${SITE.title}首页`}>
+			<span class="site-brand__name">{SITE.title}</span>
+			<span class="site-brand__label">{SITE.label}</span>
+		</a>
+		<div class="site-header__controls">
+			<nav class="site-nav" aria-label="主要导航">
+				<ul class="site-nav__list">
+					{
+						links.map((link) => (
+							<li>
+								<a
+									class="site-nav__link"
+									href={link.href}
+									aria-current={isCurrent(link.href) ? 'page' : undefined}
+								>
+									{link.label}
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</nav>
+			<button
+				type="button"
+				class="site-control"
+				data-theme-toggle
+				aria-label="切换到深色模式"
+				aria-pressed="false"
+				title="切换到深色模式"
+			>
+				<svg
+					data-theme-icon="moon"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.75"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79Z"></path>
+				</svg>
+				<svg
+					data-theme-icon="sun"
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.75"
+					stroke-linecap="round"
+					stroke-linejoin="round"
+					aria-hidden="true"
+				>
+					<circle cx="12" cy="12" r="4"></circle>
+					<path
+						d="M12 2v2M12 20v2M4.93 4.93l1.42 1.42M17.66 17.66l1.41 1.41M2 12h2M20 12h2M4.93 19.07l1.42-1.42M17.66 6.34l1.41-1.41"
+					></path>
+				</svg>
+			</button>
+			<button
+				type="button"
+				class="site-control"
+				data-open-mobile-nav
+				aria-label="打开导航菜单"
+				aria-haspopup="dialog"
+			>
+				<svg
+					viewBox="0 0 24 24"
+					fill="none"
+					stroke="currentColor"
+					stroke-width="1.75"
+					stroke-linecap="round"
+					aria-hidden="true"
+				>
+					<path d="M4 7h16M4 12h16M4 17h16"></path>
+				</svg>
+			</button>
+		</div>
+	</div>
+</header>
+
+<dialog class="mobile-nav" data-mobile-nav aria-labelledby="mobile-nav-title">
+	<div class="mobile-nav__header">
+		<span class="mobile-nav__title" id="mobile-nav-title">网站导航</span>
+		<button type="button" class="site-control" data-close-mobile-nav aria-label="关闭导航菜单">
+			<svg
+				viewBox="0 0 24 24"
+				fill="none"
+				stroke="currentColor"
+				stroke-width="1.75"
+				stroke-linecap="round"
+				aria-hidden="true"
+			>
+				<path d="m6 6 12 12M18 6 6 18"></path>
+			</svg>
+		</button>
+	</div>
+	<nav aria-label="手机导航">
+		<ul class="mobile-nav__list">
+			{
+				links.map((link) => (
+					<li>
+						<a class="mobile-nav__link" href={link.href}>
+							{link.label}
+						</a>
+					</li>
+				))
+			}
+		</ul>
+	</nav>
+</dialog>
