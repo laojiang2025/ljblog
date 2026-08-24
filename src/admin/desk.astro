@@ -1,7 +1,8 @@
 ---
-import BaseLayout from '../../layouts/BaseLayout.astro';
+import BaseLayout from '../layouts/BaseLayout.astro';
 
-// 写作台只服务本地 dev：线上构建直接输出跳转页，表单和说明都不会出现在产物里
+// 双保险：本路由只会在 dev 命令下被注入（见 astro.config.mjs 的 adminDesk 集成），
+// 万一未来有人把这个文件挪回 src/pages/，这行守卫仍能保证线上无内容
 if (import.meta.env.PROD) return Astro.redirect('/');
 
 const description = '本地写作台：在 astro dev 下写文章、维护产品与开源 Skills。';

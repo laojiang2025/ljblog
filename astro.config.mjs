@@ -188,6 +188,24 @@ function adminWriter() {
 	};
 }
 
+/**
+ * 写作台路由只在 `astro dev` 时注入。
+ * 构建（上云部署）产物里不存在 /admin/ 这个路径——访问它就是 404，
+ * 配合 adminWriter 的 dev-only 中间件，线上没有后台的任何痕迹。
+ */
+function adminDesk() {
+	return {
+		name: 'ljblog-admin-desk',
+		hooks: {
+			/** @param {{ command: string, injectRoute: (r: { pattern: string, entrypoint: string }) => void }} ctx */
+			'astro:config:setup': ({ command, injectRoute }) => {
+				if (command !== 'dev') return;
+				injectRoute({ pattern: '/admin', entrypoint: './src/admin/desk.astro' });
+			},
+		},
+	};
+}
+
 // https://astro.build/config
 export default defineConfig({
 	site: 'https://example.com',
@@ -195,6 +213,7 @@ export default defineConfig({
 	devToolbar: {
 		enabled: false,
 	},
+	integrations: [adminDesk()],
 	// 节点图下线后，旧地址（含已打开的标签页与外部链接）转到接管其内容的关于页
 	// 面试题库栏目暂时下线，旧地址转到文章列表
 	redirects: {
