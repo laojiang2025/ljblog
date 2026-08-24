@@ -3,7 +3,7 @@
  *
  * 分层约定：
  * 1. 令牌（:root / [data-theme='dark']）——全站唯一的颜色、圆角、阴影来源，
- *    页面级 CSS（tools.css / interview.css / content.css）只允许
+ *    页面级 CSS（tools.css / content.css）只允许
  *    引用这里的变量，禁止再出现裸色值，保证明暗主题一处切换全站生效。
  * 2. @theme inline——把语义令牌映射成 Tailwind 工具类（bg-background 等），
  *    新页面布局直接写 utility，重复出现的小部件才落到组件类。

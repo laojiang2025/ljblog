@@ -34,6 +34,5 @@ export const PRIMARY_NAV: readonly NavItem[] = [
 	{ id: 'home', label: '首页', href: '/' },
 	{ id: 'blog', label: '文章', href: '/blog/' },
 	{ id: 'tools', label: '工具', href: '/tools/' },
-	{ id: 'interview', label: '题库', href: '/interview/' },
 	{ id: 'about', label: '关于', href: '/about/' },
 ];
