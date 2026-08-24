@@ -1,0 +1,26 @@
+[
+	{
+		"id": "placeholder-skill-1",
+		"name": "Skill 占位 · 待替换",
+		"summary": "把你的开源 skill 仓库地址发给我，这里就换成真实条目：名称、用途、安装方式。",
+		"repo": "",
+		"usage": "",
+		"tags": ["待补充"]
+	},
+	{
+		"id": "placeholder-skill-2",
+		"name": "Skill 占位 · 待替换",
+		"summary": "也可以直接给 GitHub 用户名，我来筛出适合展示的仓库列表给你确认。",
+		"repo": "",
+		"usage": "",
+		"tags": ["待补充"]
+	},
+	{
+		"id": "placeholder-skill-3",
+		"name": "Skill 占位 · 待替换",
+		"summary": "数据在写作台「Skills」页签或 src/data/skills.json 里维护，改完即生效。",
+		"repo": "",
+		"usage": "",
+		"tags": ["待补充"]
+	}
+]

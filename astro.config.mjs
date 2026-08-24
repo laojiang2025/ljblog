@@ -22,7 +22,86 @@ function adminWriter() {
 		/** @param {import('vite').ViteDevServer} server */
 		configureServer(server) {
 			const blogDir = path.resolve(server.config.root, 'src/content/blog');
+			const dataDir = path.resolve(server.config.root, 'src/data');
 			const safeSlug = /^[a-z0-9][a-z0-9-]{0,79}$/;
+
+			const ICON_NAMES = [
+				'grid', 'flask', 'checklist', 'briefcase', 'play', 'resume', 'book', 'compass',
+				'database', 'terminal', 'cpu', 'clock', 'braces', 'bug', 'rss', 'external',
+				'copy', 'arrowUp', 'mail', 'link', 'diff',
+			];
+			const str = (/** @type {unknown} */ v) => String(v ?? '').trim();
+			const strList = (/** @type {unknown} */ v) =>
+				Array.isArray(v) ? v.map((t) => String(t).trim()).filter(Boolean) : [];
+
+			/** 每种数据的校验 + 规范化；抛错即整体拒绝保存 */
+			const DATA_KINDS = {
+				products: (/** @type {any} */ item, /** @type {number} */ i) => {
+					const name = str(item.name);
+					const tagline = str(item.tagline);
+					if (!name || !tagline) throw new Error(`第 ${i + 1} 个产品缺少名称或一句话定位`);
+					const status = item.status === 'online' ? 'online' : 'building';
+					const href = str(item.href);
+					if (status === 'online' && !href) throw new Error(`产品「${name}」是在线状态，必须填链接`);
+					return {
+						id: str(item.id) || `product-${Date.now()}-${i}`,
+						name,
+						tagline,
+						description: str(item.description),
+						status,
+						href,
+						external: Boolean(item.external) || /^https?:\/\//.test(href),
+						icon: ICON_NAMES.includes(item.icon) ? item.icon : 'cpu',
+						tags: strList(item.tags),
+					};
+				},
+				skills: (/** @type {any} */ item, /** @type {number} */ i) => {
+					const name = str(item.name);
+					const summary = str(item.summary);
+					if (!name || !summary) throw new Error(`第 ${i + 1} 条 skill 缺少名称或用途说明`);
+					const repo = str(item.repo);
+					if (repo && !/^https?:\/\//.test(repo)) throw new Error(`skill「${name}」的仓库地址应以 http(s):// 开头`);
+					return {
+						id: str(item.id) || `skill-${Date.now()}-${i}`,
+						name,
+						summary,
+						repo,
+						usage: str(item.usage),
+						tags: strList(item.tags),
+					};
+				},
+			};
+
+			// 读取产品 / Skills 数据，供写作台管理页签
+			server.middlewares.use('/__admin/data', (req, res) => {
+				const url = new URL(req.url ?? '', 'http://localhost');
+				const kind = url.searchParams.get('kind') ?? '';
+				if (!(kind in DATA_KINDS)) return json(res, 400, { ok: false, error: 'kind 应为 products 或 skills' });
+				const file = path.join(dataDir, `${kind}.json`);
+
+				if (req.method === 'GET') {
+					readFile(file, 'utf8')
+						.then((raw) => json(res, 200, { ok: true, items: JSON.parse(raw) }))
+						.catch((e) => json(res, 500, { ok: false, error: String((e && e.message) || e) }));
+					return;
+				}
+				if (req.method !== 'POST') return json(res, 405, { ok: false, error: '仅支持 GET / POST' });
+
+				let body = '';
+				req.on('data', (chunk) => (body += chunk));
+				req.on('end', async () => {
+					try {
+						const data = JSON.parse(body || '{}');
+						if (!Array.isArray(data.items)) throw new Error('items 应为数组');
+						const normalize = DATA_KINDS[/** @type {keyof typeof DATA_KINDS} */ (kind)];
+						const items = data.items.map(normalize);
+						await writeFile(file, JSON.stringify(items, null, '\t') + '\n', 'utf8');
+						json(res, 200, { ok: true, count: items.length, file: `src/data/${kind}.json` });
+					} catch (e) {
+						json(res, 400, { ok: false, error: String((e && e.message) || e) });
+					}
+				});
+			});
 
 			// 列出已有文章（slug + 标题），供写作台展示与编辑入口
 			server.middlewares.use('/__admin/posts', async (req, res) => {
