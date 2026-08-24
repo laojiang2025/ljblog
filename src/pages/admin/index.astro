@@ -1,6 +1,9 @@
 ---
 import BaseLayout from '../../layouts/BaseLayout.astro';
 
+// 写作台只服务本地 dev：线上构建直接输出跳转页，表单和说明都不会出现在产物里
+if (import.meta.env.PROD) return Astro.redirect('/');
+
 const description = '本地写作台：在 astro dev 下直接写文章，保存即生成 Markdown。';
 ---
 
