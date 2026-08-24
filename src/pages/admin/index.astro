@@ -1,0 +1,254 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+
+const description = '本地写作台：在 astro dev 下直接写文章，保存即生成 Markdown。';
+---
+
+<BaseLayout title="写作台" description={description} pageKind="landing">
+	<meta name="robots" content="noindex, nofollow" slot="head" />
+	<div class="mx-auto w-full max-w-[1100px] px-8 py-16 lg:py-20">
+		<p class="page-kicker">Local admin</p>
+		<h1 class="page-title">写作台</h1>
+		<p class="page-lead">
+			只在本地 <code class="rounded bg-surface-hover px-1.5 py-0.5 font-mono text-sm">astro dev</code>
+			模式可用：填写下面的表单，保存后文章直接生成到
+			<code class="rounded bg-surface-hover px-1.5 py-0.5 font-mono text-sm">src/content/blog/</code>，
+			刷新即可在文章列表看到。
+		</p>
+
+		<div
+			class="mt-6 hidden rounded-[14px] border border-border bg-surface-hover px-4 py-3 text-sm text-muted"
+			data-admin-offline
+		>
+			当前不是本地 dev 环境（或 dev 服务未启动），写作台无法保存。请在项目目录运行
+			<code class="font-mono">astro dev</code> 后访问 <code class="font-mono">localhost:4321/admin/</code>。
+		</div>
+
+		<form class="mt-10 grid gap-5" data-admin-form>
+			<div class="grid gap-5 sm:grid-cols-2">
+				<label class="grid gap-1.5">
+					<span class="text-sm font-medium">标题 *</span>
+					<input class="admin-input" name="title" required placeholder="文章标题" autocomplete="off" />
+				</label>
+				<label class="grid gap-1.5">
+					<span class="text-sm font-medium">
+						URL slug *
+						<span class="ml-1 font-normal text-faint">（小写字母、数字、中划线）</span>
+					</span>
+					<input
+						class="admin-input font-mono"
+						name="slug"
+						required
+						pattern="[a-z0-9][a-z0-9-]*"
+						placeholder="my-first-post"
+						autocomplete="off"
+					/>
+				</label>
+			</div>
+
+			<label class="grid gap-1.5">
+				<span class="text-sm font-medium">摘要 *<span class="ml-1 font-normal text-faint">（列表页与 SEO 描述）</span></span>
+				<input class="admin-input" name="description" required placeholder="一两句话说清楚这篇文章讲什么" autocomplete="off" />
+			</label>
+
+			<div class="grid gap-5 sm:grid-cols-3">
+				<label class="grid gap-1.5">
+					<span class="text-sm font-medium">发布日期 *</span>
+					<input class="admin-input font-mono" name="pubDate" type="date" required />
+				</label>
+				<label class="grid gap-1.5 sm:col-span-2">
+					<span class="text-sm font-medium">标签<span class="ml-1 font-normal text-faint">（逗号分隔）</span></span>
+					<input class="admin-input" name="tags" placeholder="AI, 测试, 效率" autocomplete="off" />
+				</label>
+			</div>
+
+			<label class="grid gap-1.5">
+				<span class="text-sm font-medium">正文（Markdown）</span>
+				<textarea
+					class="admin-input min-h-[420px] font-mono text-[14px] leading-relaxed"
+					name="content"
+					placeholder="## 从这里开始写&#10;&#10;支持全部 Markdown 语法。"></textarea>
+				<span class="text-right font-mono text-xs text-faint" data-admin-count>0 字</span>
+			</label>
+
+			<div class="flex flex-wrap items-center gap-6">
+				<label class="inline-flex items-center gap-2 text-sm">
+					<input type="checkbox" name="draft" class="size-4 accent-current" />存为草稿（不出现在线上）
+				</label>
+				<label class="inline-flex items-center gap-2 text-sm">
+					<input type="checkbox" name="overwrite" class="size-4 accent-current" />覆盖已有文章
+				</label>
+			</div>
+
+			<div class="flex flex-wrap items-center gap-4">
+				<button
+					class="inline-flex h-12 items-center rounded-full bg-foreground px-7 text-base font-medium text-background transition-opacity hover:opacity-85 disabled:opacity-50"
+					type="submit"
+				>
+					保存文章
+				</button>
+				<p class="text-sm" data-admin-status role="status"></p>
+			</div>
+		</form>
+
+		<section class="mt-14" aria-labelledby="admin-posts-title">
+			<h2 id="admin-posts-title" class="text-lg font-semibold tracking-tight">已有文章</h2>
+			<ul class="mt-4 divide-y divide-border" data-admin-posts>
+				<li class="py-3 text-sm text-faint">加载中…</li>
+			</ul>
+		</section>
+	</div>
+</BaseLayout>
+
+<style>
+	.admin-input {
+		border: 1px solid var(--border);
+		background: color-mix(in srgb, var(--surface) 88%, transparent);
+		border-radius: 12px;
+		padding: 0.65rem 0.9rem;
+		font-size: 15px;
+		color: var(--text);
+		transition: border-color 0.15s ease;
+	}
+	.admin-input:focus {
+		outline: none;
+		border-color: var(--border-strong);
+	}
+</style>
+
+<script>
+	function initAdmin() {
+		const form = document.querySelector<HTMLFormElement>('[data-admin-form]');
+		if (!form || form.dataset.bound) return;
+		form.dataset.bound = '1';
+
+		const statusEl = document.querySelector<HTMLElement>('[data-admin-status]')!;
+		const offlineEl = document.querySelector<HTMLElement>('[data-admin-offline]')!;
+		const postsEl = document.querySelector<HTMLElement>('[data-admin-posts]')!;
+		const contentEl = form.elements.namedItem('content') as HTMLTextAreaElement;
+		const countEl = document.querySelector<HTMLElement>('[data-admin-count]')!;
+		const dateEl = form.elements.namedItem('pubDate') as HTMLInputElement;
+		if (!dateEl.value) dateEl.value = new Date().toISOString().slice(0, 10);
+
+		const updateCount = () => (countEl.textContent = `${contentEl.value.length} 字`);
+		contentEl.addEventListener('input', updateCount);
+		updateCount();
+
+		const setStatus = (text: string, kind: 'ok' | 'err' | '' = '') => {
+			statusEl.textContent = text;
+			statusEl.style.color = kind === 'err' ? 'var(--warm, #c2410c)' : kind === 'ok' ? 'var(--accent)' : '';
+		};
+
+		const loadPosts = async () => {
+			try {
+				const res = await fetch('/__admin/posts');
+				const data = await res.json();
+				if (!data.ok) throw new Error(data.error);
+				postsEl.innerHTML = '';
+				if (data.posts.length === 0) {
+					postsEl.innerHTML = '<li class="py-3 text-sm text-faint">还没有文章。</li>';
+					return;
+				}
+				for (const post of data.posts) {
+					const li = document.createElement('li');
+					li.className = 'flex items-center justify-between gap-4 py-3';
+					const left = document.createElement('span');
+					left.className = 'min-w-0';
+					left.innerHTML = `<span class="block truncate text-sm font-medium">${post.title}</span><span class="font-mono text-xs text-faint">${post.file}</span>`;
+					const btn = document.createElement('button');
+					btn.type = 'button';
+					btn.className =
+						'shrink-0 rounded-full border border-border px-4 py-1.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground';
+					btn.textContent = '编辑';
+					btn.addEventListener('click', () => loadPost(post.slug));
+					li.append(left, btn);
+					postsEl.append(li);
+				}
+			} catch {
+				offlineEl.classList.remove('hidden');
+				postsEl.innerHTML = '<li class="py-3 text-sm text-faint">dev 服务不可用，无法列出文章。</li>';
+			}
+		};
+
+		const setField = (name: string, value: string) => {
+			(form.elements.namedItem(name) as HTMLInputElement).value = value;
+		};
+
+		const loadPost = async (slug: string) => {
+			try {
+				const res = await fetch(`/__admin/post?slug=${encodeURIComponent(slug)}`);
+				const data = await res.json();
+				if (!data.ok) throw new Error(data.error);
+				const raw: string = data.raw;
+				const m = raw.match(/^---\n([\s\S]*?)\n---\n?/);
+				const fm = m?.[1] ?? '';
+				const pick = (key: string) =>
+					fm
+						.match(new RegExp(`^${key}:\\s*(.+)$`, 'm'))?.[1]
+						.trim()
+						.replace(/^['"]|['"]$/g, '')
+						.replace(/''/g, "'") ?? '';
+				setField('title', pick('title'));
+				setField('slug', slug);
+				setField('description', pick('description'));
+				const rawDate = pick('pubDate');
+				setField('pubDate', /^\d{4}-\d{2}-\d{2}/.test(rawDate) ? rawDate.slice(0, 10) : '');
+				setField(
+					'tags',
+					(fm.match(/^tags:\s*\[(.*)\]$/m)?.[1] ?? '')
+						.split(',')
+						.map((t) => t.trim().replace(/^['"]|['"]$/g, ''))
+						.filter(Boolean)
+						.join(', '),
+				);
+				(form.elements.namedItem('draft') as HTMLInputElement).checked = /^draft:\s*true$/m.test(fm);
+				(form.elements.namedItem('overwrite') as HTMLInputElement).checked = true;
+				contentEl.value = m ? raw.slice(m[0].length) : raw;
+				updateCount();
+				setStatus(`已载入 ${slug}.md，保存会覆盖原文`, 'ok');
+				form.scrollIntoView({ behavior: 'smooth' });
+			} catch (e) {
+				setStatus(`载入失败：${e instanceof Error ? e.message : e}`, 'err');
+			}
+		};
+
+		form.addEventListener('submit', async (event) => {
+			event.preventDefault();
+			const fd = new FormData(form);
+			setStatus('保存中…');
+			try {
+				const res = await fetch('/__admin/save', {
+					method: 'POST',
+					headers: { 'Content-Type': 'application/json' },
+					body: JSON.stringify({
+						title: fd.get('title'),
+						slug: fd.get('slug'),
+						description: fd.get('description'),
+						pubDate: fd.get('pubDate'),
+						tags: String(fd.get('tags') ?? '')
+							.split(/[,，]/)
+							.map((t) => t.trim())
+							.filter(Boolean),
+						draft: fd.get('draft') === 'on',
+						overwrite: fd.get('overwrite') === 'on',
+						content: fd.get('content'),
+					}),
+				});
+				const data = await res.json();
+				if (!data.ok) throw new Error(data.error);
+				setStatus('已保存', 'ok');
+				statusEl.innerHTML = `已保存 <code class="font-mono">${data.file}</code>，<a class="underline" href="${data.url}" target="_blank">打开文章 ↗</a>`;
+				loadPosts();
+			} catch (e) {
+				const msg = e instanceof Error ? e.message : String(e);
+				if (msg.includes('fetch')) offlineEl.classList.remove('hidden');
+				setStatus(`保存失败：${msg}`, 'err');
+			}
+		});
+
+		loadPosts();
+	}
+
+	document.addEventListener('astro:page-load', initAdmin);
+	initAdmin();
+</script>
