@@ -1,0 +1,42 @@
+[
+	{
+		"id": "wechat",
+		"label": "公众号",
+		"icon": "mail",
+		"type": "panel",
+		"href": "",
+		"panelTitle": "微信公众号",
+		"panelText": "把二维码图片放到 public/qr-wechat.png 后自动展示。",
+		"panelImage": "/qr-wechat.png"
+	},
+	{
+		"id": "github",
+		"label": "GitHub",
+		"icon": "link",
+		"type": "link",
+		"href": "https://github.com",
+		"panelTitle": "",
+		"panelText": "",
+		"panelImage": ""
+	},
+	{
+		"id": "contact",
+		"label": "联系我",
+		"icon": "compass",
+		"type": "link",
+		"href": "/about/",
+		"panelTitle": "",
+		"panelText": "",
+		"panelImage": ""
+	},
+	{
+		"id": "back-top",
+		"label": "回顶部",
+		"icon": "arrowUp",
+		"type": "top",
+		"href": "",
+		"panelTitle": "",
+		"panelText": "",
+		"panelImage": ""
+	}
+]

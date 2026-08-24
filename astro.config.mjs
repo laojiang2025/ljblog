@@ -70,6 +70,23 @@ function adminWriter() {
 						tags: strList(item.tags),
 					};
 				},
+				sidebar: (/** @type {any} */ item, /** @type {number} */ i) => {
+					const label = str(item.label);
+					if (!label) throw new Error(`第 ${i + 1} 个侧边栏条目缺少名称`);
+					const type = ['link', 'panel', 'top'].includes(item.type) ? item.type : 'link';
+					const href = str(item.href);
+					if (type === 'link' && !href) throw new Error(`侧边栏「${label}」是链接类型，必须填链接`);
+					return {
+						id: str(item.id) || `dock-${Date.now()}-${i}`,
+						label,
+						icon: ICON_NAMES.includes(item.icon) ? item.icon : 'link',
+						type,
+						href,
+						panelTitle: str(item.panelTitle),
+						panelText: str(item.panelText),
+						panelImage: str(item.panelImage),
+					};
+				},
 			};
 
 			// 读取产品 / Skills 数据，供写作台管理页签

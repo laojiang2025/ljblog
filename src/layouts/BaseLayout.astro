@@ -3,6 +3,7 @@ import { ClientRouter } from 'astro:transitions';
 import { SITE } from '../consts';
 import SiteHeader from '../components/SiteHeader.astro';
 import SiteFooter from '../components/SiteFooter.astro';
+import SideDock from '../components/SideDock.astro';
 import '../styles/global.css';
 
 interface Props {
@@ -75,6 +76,7 @@ const pageTitle = title === SITE.title ? `${SITE.title} | ${SITE.label}` : `${ti
 			</main>
 			<SiteFooter />
 		</div>
+		<SideDock />
 		<script>
 			import '../scripts/site-chrome.ts';
 		</script>

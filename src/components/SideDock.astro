@@ -1,0 +1,184 @@
+---
+import Icon from './Icon.astro';
+import { SIDEBAR_ITEMS } from '../data/sidebar';
+
+/**
+ * 悬浮右侧工具栏：数据驱动（src/data/sidebar.json），
+ * 桌面端固定在视口右侧垂直居中，小屏隐藏避免遮挡正文。
+ */
+const isExternal = (href: string) => /^https?:\/\//.test(href);
+---
+
+{
+	SIDEBAR_ITEMS.length > 0 && (
+		<nav class="side-dock" data-side-dock aria-label="快捷工具栏">
+			<ul>
+				{SIDEBAR_ITEMS.map((item) => (
+					<li class="side-dock__cell">
+						{item.type === 'link' && item.href ? (
+							<a
+								class="side-dock__btn"
+								href={item.href}
+								target={isExternal(item.href) ? '_blank' : undefined}
+								rel={isExternal(item.href) ? 'noopener noreferrer' : undefined}
+							>
+								<Icon name={item.icon} class="size-4.5" />
+								<span>{item.label}</span>
+							</a>
+						) : item.type === 'top' ? (
+							<button class="side-dock__btn" type="button" data-dock-top aria-label="回到顶部">
+								<Icon name={item.icon} class="size-4.5" />
+								<span>{item.label}</span>
+							</button>
+						) : (
+							<>
+								<button
+									class="side-dock__btn"
+									type="button"
+									data-dock-panel-btn={item.id}
+									aria-expanded="false"
+									aria-controls={`dock-panel-${item.id}`}
+								>
+									<Icon name={item.icon} class="size-4.5" />
+									<span>{item.label}</span>
+								</button>
+								<div class="side-dock__panel" id={`dock-panel-${item.id}`} data-dock-panel={item.id} hidden>
+									{item.panelTitle && <strong>{item.panelTitle}</strong>}
+									{item.panelImage && (
+										<img src={item.panelImage} alt={item.panelTitle || item.label} loading="lazy" data-dock-panel-img />
+									)}
+									{item.panelText && <p>{item.panelText}</p>}
+								</div>
+							</>
+						)}
+					</li>
+				))}
+			</ul>
+		</nav>
+	)
+}
+
+<style>
+	.side-dock {
+		position: fixed;
+		right: 1rem;
+		top: 50%;
+		z-index: 40;
+		transform: translateY(-50%);
+		display: none;
+	}
+	@media (min-width: 48rem) {
+		.side-dock {
+			display: block;
+		}
+	}
+	.side-dock ul {
+		display: flex;
+		flex-direction: column;
+		gap: 0.5rem;
+	}
+	.side-dock__cell {
+		position: relative;
+	}
+	.side-dock__btn {
+		display: flex;
+		flex-direction: column;
+		align-items: center;
+		gap: 0.3rem;
+		width: 3.9rem;
+		padding: 0.65rem 0.3rem;
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		background: color-mix(in srgb, var(--surface) 92%, transparent);
+		box-shadow: var(--shadow-sm);
+		color: var(--text-muted);
+		font-size: 11px;
+		line-height: 1;
+		cursor: pointer;
+		transition:
+			color 0.15s ease,
+			border-color 0.15s ease,
+			transform 0.15s ease,
+			box-shadow 0.15s ease;
+	}
+	.side-dock__btn:hover {
+		color: var(--accent);
+		border-color: var(--border-strong);
+		transform: translateX(-2px);
+		box-shadow: var(--shadow-md);
+	}
+	.side-dock__panel {
+		position: absolute;
+		right: calc(100% + 0.6rem);
+		top: 50%;
+		transform: translateY(-50%);
+		width: 13rem;
+		padding: 0.9rem;
+		border: 1px solid var(--border);
+		border-radius: 14px;
+		background: var(--surface);
+		box-shadow: var(--shadow-md);
+	}
+	.side-dock__panel strong {
+		display: block;
+		font-size: 13px;
+	}
+	.side-dock__panel img {
+		display: block;
+		width: 100%;
+		margin-top: 0.6rem;
+		border-radius: 8px;
+	}
+	.side-dock__panel p {
+		margin-top: 0.5rem;
+		font-size: 12px;
+		line-height: 1.6;
+		color: var(--text-muted);
+	}
+</style>
+
+<script>
+	function initSideDock() {
+		const dock = document.querySelector<HTMLElement>('[data-side-dock]');
+		if (!dock || dock.dataset.bound) return;
+		dock.dataset.bound = '1';
+
+		const closeAll = () => {
+			dock.querySelectorAll<HTMLElement>('[data-dock-panel]').forEach((p) => (p.hidden = true));
+			dock
+				.querySelectorAll<HTMLButtonElement>('[data-dock-panel-btn]')
+				.forEach((b) => b.setAttribute('aria-expanded', 'false'));
+		};
+
+		dock.querySelectorAll<HTMLButtonElement>('[data-dock-panel-btn]').forEach((btn) => {
+			const panel = dock.querySelector<HTMLElement>(`[data-dock-panel="${btn.dataset.dockPanelBtn}"]`);
+			if (!panel) return;
+			btn.addEventListener('click', (event) => {
+				event.stopPropagation();
+				const willOpen = panel.hidden;
+				closeAll();
+				panel.hidden = !willOpen;
+				btn.setAttribute('aria-expanded', String(willOpen));
+			});
+		});
+
+		// 图片缺失（比如还没放二维码）时收起图片位，只留文字说明
+		dock.querySelectorAll<HTMLImageElement>('[data-dock-panel-img]').forEach((img) => {
+			img.addEventListener('error', () => (img.hidden = true));
+		});
+
+		dock.querySelector('[data-dock-top]')?.addEventListener('click', () => {
+			window.scrollTo({ top: 0, behavior: 'smooth' });
+		});
+
+		document.addEventListener('click', (event) => {
+			if (!dock.contains(event.target as Node)) closeAll();
+		});
+		document.addEventListener('keydown', (event) => {
+			if (event.key === 'Escape') closeAll();
+		});
+	}
+
+	document.addEventListener('astro:page-load', initSideDock);
+	initSideDock();
+</script>

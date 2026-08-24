@@ -37,6 +37,7 @@ const ICON_OPTIONS = [
 					{ id: 'post', label: '写文章' },
 					{ id: 'products', label: '产品' },
 					{ id: 'skills', label: 'Skills' },
+					{ id: 'sidebar', label: '侧边栏' },
 				].map((tab, index) => (
 					<button
 						type="button"
@@ -216,6 +217,67 @@ const ICON_OPTIONS = [
 			<section class="mt-12" aria-labelledby="admin-skills-title">
 				<h2 id="admin-skills-title" class="text-lg font-semibold tracking-tight">已有 Skills</h2>
 				<ul class="mt-4 divide-y divide-border" data-skills-list>
+					<li class="py-3 text-sm text-faint">加载中…</li>
+				</ul>
+			</section>
+		</section>
+
+		<!-- ── 侧边栏 ─────────────────────────── -->
+		<section data-admin-panel="sidebar" hidden>
+			<p class="mt-8 rounded-[14px] border border-border bg-surface-hover px-4 py-3 text-sm text-muted">
+				这里维护网站右侧的悬浮工具栏。三种类型：<b>链接</b>（跳转站内外地址）、<b>弹出面板</b>（点击展开文字 +
+				可选图片，适合公众号二维码）、<b>回顶部</b>。条目顺序即显示顺序，可用「上移」调整。
+			</p>
+			<form class="mt-6 grid gap-5" data-sidebar-form>
+				<input type="hidden" name="id" />
+				<div class="grid gap-5 sm:grid-cols-4">
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">名称 *</span>
+						<input class="admin-input" name="label" required placeholder="公众号" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">类型</span>
+						<select class="admin-input" name="type">
+							<option value="link" selected>链接</option>
+							<option value="panel">弹出面板</option>
+							<option value="top">回顶部</option>
+						</select>
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">图标</span>
+						<select class="admin-input font-mono" name="icon">
+							{ICON_OPTIONS.map((icon) => <option value={icon}>{icon}</option>)}
+						</select>
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">链接<span class="ml-1 font-normal text-faint">（链接类型必填）</span></span>
+						<input class="admin-input font-mono" name="href" placeholder="/about/ 或 https://…" autocomplete="off" />
+					</label>
+				</div>
+				<div class="grid gap-5 sm:grid-cols-3">
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">面板标题</span>
+						<input class="admin-input" name="panelTitle" placeholder="微信公众号" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">面板文字</span>
+						<input class="admin-input" name="panelText" placeholder="扫码关注……" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">面板图片<span class="ml-1 font-normal text-faint">（public/ 下路径）</span></span>
+						<input class="admin-input font-mono" name="panelImage" placeholder="/qr-wechat.png" autocomplete="off" />
+					</label>
+				</div>
+				<div class="flex flex-wrap items-center gap-4">
+					<button class="admin-btn" type="submit" data-sidebar-submit>新增条目</button>
+					<button class="admin-btn-ghost hidden" type="button" data-sidebar-cancel>取消编辑</button>
+					<p class="text-sm" data-sidebar-status role="status"></p>
+				</div>
+			</form>
+
+			<section class="mt-12" aria-labelledby="admin-sidebar-title">
+				<h2 id="admin-sidebar-title" class="text-lg font-semibold tracking-tight">当前侧边栏</h2>
+				<ul class="mt-4 divide-y divide-border" data-sidebar-list>
 					<li class="py-3 text-sm text-faint">加载中…</li>
 				</ul>
 			</section>
@@ -452,6 +514,20 @@ const ICON_OPTIONS = [
 					li.innerHTML = rowHtml(item);
 					const actions = document.createElement('span');
 					actions.className = 'flex shrink-0 gap-2';
+					if (index > 0) {
+						const upBtn = document.createElement('button');
+						upBtn.type = 'button';
+						upBtn.className =
+							'rounded-full border border-border px-3 py-1.5 text-sm text-muted transition-colors hover:border-border-strong hover:text-foreground';
+						upBtn.textContent = '↑';
+						upBtn.title = '上移';
+						upBtn.addEventListener('click', async () => {
+							const next = [...items];
+							[next[index - 1], next[index]] = [next[index], next[index - 1]];
+							await persist(next, '已调整顺序');
+						});
+						actions.append(upBtn);
+					}
 					const editBtn = document.createElement('button');
 					editBtn.type = 'button';
 					editBtn.className =
@@ -474,7 +550,7 @@ const ICON_OPTIONS = [
 						'rounded-full border border-border px-4 py-1.5 text-sm text-muted transition-colors hover:border-red-400 hover:text-red-500';
 					delBtn.textContent = '删除';
 					delBtn.addEventListener('click', async () => {
-						if (!confirm(`确定删除「${item.name}」？`)) return;
+						if (!confirm(`确定删除「${item.name ?? item.label}」？`)) return;
 						const next = items.filter((_, i) => i !== index);
 						await persist(next, '已删除');
 					});
@@ -558,6 +634,16 @@ const ICON_OPTIONS = [
 			updateLabel: '保存修改',
 			rowHtml: (item) =>
 				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}${item.repo ? '<span class="ml-2 font-mono text-xs text-accent">repo ✓</span>' : '<span class="ml-2 font-mono text-xs text-faint">无仓库</span>'}</span><span class="block truncate text-[13px] text-muted">${esc(item.summary)}</span></span>`,
+		});
+
+		const sidebarTypeLabel: Record<string, string> = { link: '链接', panel: '弹出面板', top: '回顶部' };
+		setupManager({
+			kind: 'sidebar',
+			fields: ['label', 'type', 'icon', 'href', 'panelTitle', 'panelText', 'panelImage'],
+			addLabel: '新增条目',
+			updateLabel: '保存修改',
+			rowHtml: (item) =>
+				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.label)}<span class="ml-2 font-mono text-xs text-faint">${sidebarTypeLabel[String(item.type)] ?? item.type}</span></span><span class="block truncate font-mono text-xs text-muted">${esc(item.type === 'link' ? item.href : item.type === 'panel' ? item.panelTitle || item.panelText : '滚动到页面顶部')}</span></span>`,
 		});
 	}
 
