@@ -1,0 +1,66 @@
+---
+import BaseLayout from '../../layouts/BaseLayout.astro';
+import Icon from '../../components/Icon.astro';
+import { PRODUCTS } from '../../data/products';
+import { SITE } from '../../consts';
+import '../../styles/content.css';
+
+const description = `${SITE.author} 做的产品：在线工具与正在打磨的新东西。`;
+---
+
+<BaseLayout title="产品" description={description} pageKind="landing">
+	<div class="content-shell content-shell--wide">
+		<p class="page-kicker">Products</p>
+		<h1 class="page-title">我做的产品</h1>
+		<p class="page-lead">
+			把测试工作里反复出现的问题，做成可以直接使用的东西。在线的可以直接点开，开发中的会陆续上线。
+		</p>
+
+		<div class="mt-10 grid gap-4 sm:grid-cols-2">
+			{
+				PRODUCTS.map((product) => {
+					const isOnline = product.status === 'online' && product.href;
+					const card = (
+						<>
+							<div class="flex items-start justify-between gap-3">
+								<span class="inline-grid size-11 place-items-center rounded-[11px] bg-accent-soft text-accent">
+									<Icon name={product.icon} class="size-5" />
+								</span>
+								<span
+									class={`rounded-full px-2.5 py-1 font-mono text-[11px] font-semibold tracking-[0.08em] uppercase ${
+										isOnline ? 'bg-accent-soft text-accent' : 'bg-surface-hover text-faint'
+									}`}
+								>
+									{isOnline ? 'Online' : 'Building'}
+								</span>
+							</div>
+							<h2 class="mt-4 text-xl font-semibold tracking-tight">{product.name}</h2>
+							<p class="mt-1.5 text-base font-medium text-muted">{product.tagline}</p>
+							<p class="mt-2.5 text-[15px] leading-relaxed text-muted">{product.description}</p>
+							<div class="mt-4 flex flex-wrap items-center gap-1.5">
+								{product.tags.map((tag) => (
+									<span class="tag-pill">{tag}</span>
+								))}
+							</div>
+							{isOnline && <span class="home-card-arrow mt-4 inline-flex">进入产品 <span aria-hidden="true">↗</span></span>}
+						</>
+					);
+					const cardClass =
+						'group flex flex-col rounded-[20px] border border-border bg-surface/85 p-6 shadow-(--shadow-sm)';
+					return isOnline ? (
+						<a
+							class={`${cardClass} transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-(--shadow-md)`}
+							href={product.href}
+							target={product.external ? '_blank' : undefined}
+							rel={product.external ? 'noopener noreferrer' : undefined}
+						>
+							{card}
+						</a>
+					) : (
+						<article class={`${cardClass} opacity-80`}>{card}</article>
+					);
+				})
+			}
+		</div>
+	</div>
+</BaseLayout>

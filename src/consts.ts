@@ -32,7 +32,8 @@ export interface NavItem {
 /** 顶部与页脚共用的主导航；只放对外可访问的公开页面 */
 export const PRIMARY_NAV: readonly NavItem[] = [
 	{ id: 'home', label: '首页', href: '/' },
+	{ id: 'products', label: '产品', href: '/products/' },
+	{ id: 'skills', label: 'Skills', href: '/skills/' },
 	{ id: 'blog', label: '文章', href: '/blog/' },
-	{ id: 'tools', label: '工具', href: '/tools/' },
 	{ id: 'about', label: '关于', href: '/about/' },
 ];
