@@ -1,28 +1,48 @@
 ---
-import { SITE } from '../consts';
+import { SITE, PRIMARY_NAV } from '../consts';
 import ChannelList from './ChannelList.astro';
 
 const year = new Date().getFullYear();
 ---
 
-<footer class="site-footer">
-	<div class="site-footer__inner">
-		<div class="site-footer__brand">
-			<span class="site-footer__name">{SITE.title}</span>
-			<p class="site-footer__desc">{SITE.description}</p>
+
+<footer class="site-footer border-t border-border bg-surface/80">
+	<div class="site-footer__inner mx-auto grid w-full max-w-[1920px] gap-8 px-6 py-10 sm:px-8 lg:grid-cols-[1.2fr_1fr_1.4fr] lg:gap-12 lg:px-16 2xl:px-20">
+		<div class="max-w-xs">
+			<p class="flex items-center gap-2 text-sm font-semibold tracking-tight"><span class="grid size-7 place-items-center rounded-lg bg-foreground font-mono text-[10px] text-background">LJ</span>{SITE.title}</p>
+			<p class="mt-2 text-sm text-muted">{SITE.description}</p>
 		</div>
 
-		<div class="site-footer__channels">
-			<p class="site-footer__label">关注我</p>
-			<ChannelList variant="compact" />
+		<div>
+			<p class="text-xs font-medium tracking-wide text-faint uppercase">关注我</p>
+			<div class="mt-3">
+				<ChannelList variant="compact" />
+			</div>
 		</div>
 
-		<nav class="site-footer__links" aria-label="页脚导航">
-			<a href="/">工作台</a>
-			<a href="/blog/">资料库</a>
-			<a href="/about/">关于</a>
-			<a href="/rss.xml">RSS</a>
+		<nav class="site-footer__nav min-w-0" aria-label="页脚导航">
+			<p class="text-xs font-medium tracking-wide text-faint uppercase">站内</p>
+			<ul class="site-footer__links mt-4 flex flex-wrap items-center gap-x-5 gap-y-2">
+				{
+					PRIMARY_NAV.map((link) => (
+						<li>
+							<a class="text-sm text-muted transition-colors hover:text-foreground" href={link.href}>
+								{link.label}
+							</a>
+						</li>
+					))
+				}
+				<li>
+					<a class="text-sm text-muted transition-colors hover:text-foreground" href="/rss.xml">
+						RSS
+					</a>
+				</li>
+			</ul>
 		</nav>
 	</div>
-	<p class="site-footer__copy">© {year} {SITE.author}</p>
+	<div class="border-t border-border">
+		<p class="mx-auto w-full max-w-[1920px] px-6 py-4 text-xs text-faint sm:px-8 lg:px-16 2xl:px-20">
+			© {year} {SITE.author} · 工具全部在浏览器本地运行，不上传任何数据
+		</p>
+	</div>
 </footer>

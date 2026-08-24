@@ -2,7 +2,6 @@
 import BaseLayout from '../../layouts/BaseLayout.astro';
 import Icon from '../../components/Icon.astro';
 import { TOOLS } from '../../data/tools';
-import '../../styles/tools.css';
 
 const ready = TOOLS.filter((tool) => tool.status === 'ready').length;
 const pending = TOOLS.length - ready;
@@ -13,39 +12,45 @@ const pending = TOOLS.length - ready;
 	description="纯前端的日常测试辅助工具，全部在浏览器本地运行，不上传任何数据。"
 	pageKind="landing"
 >
-	<div class="tool-index">
-		<header class="tool-index__head">
-			<h1>测试工具箱</h1>
-			<p>
+	<div class="mx-auto w-full max-w-[1920px] px-8 py-20 lg:px-16 2xl:px-20 lg:py-28">
+		<header class="max-w-4xl">
+			<p class="font-mono text-xs tracking-[0.18em] text-accent uppercase">Tools</p>
+			<h1 class="mt-4 text-4xl font-bold tracking-tight md:text-5xl">测试工具箱</h1>
+			<p class="mt-4 max-w-3xl text-base leading-relaxed text-muted">
 				日常测试用得上的 {TOOLS.length} 个小工具，全部在浏览器本地运行，输入内容不会离开你的电脑。{
 					pending > 0 && `其中 ${ready} 个已可用，其余正陆续迁移。`
 				}
 			</p>
 		</header>
 
-		<div class="tool-index__grid">
+		<div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
 			{
 				TOOLS.map((tool) => {
 					const body = (
 						<>
-							<span class="tool-card__icon">
-								<Icon name={tool.icon} />
+							<span class="inline-grid size-9 shrink-0 place-items-center rounded-md bg-surface-hover text-muted transition-colors group-hover:bg-accent-soft group-hover:text-accent">
+								<Icon name={tool.icon} class="size-4.5" />
 							</span>
-							<span class="tool-card__body">
-								<span class="tool-card__title">{tool.name}</span>
-								<span class="tool-card__desc">{tool.summary}</span>
+							<span class="min-w-0">
+								<span class="block text-base font-medium">{tool.name}</span>
+								<span class="mt-1.5 block text-sm leading-relaxed text-muted">
+									{tool.summary}
+								</span>
 							</span>
 						</>
 					);
 
 					return tool.href ? (
-						<a class="tool-card" href={tool.href}>
+						<a
+							class="group flex items-start gap-4 rounded-[18px] border border-border bg-background/85 p-5 shadow-(--shadow-sm) transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-(--shadow-md)"
+							href={tool.href}
+						>
 							{body}
 						</a>
 					) : (
-						<div class="tool-card tool-card--pending">
+						<div class="relative flex items-start gap-4 rounded-lg border border-dashed border-border p-5 opacity-70">
 							{body}
-							<span class="tool-card__tag">迁移中</span>
+							<span class="tag-pill absolute top-3 right-3">迁移中</span>
 						</div>
 					);
 				})

@@ -36,7 +36,7 @@ export function triggerDownload(content: string, filename: string, mime: string)
 
 /**
  * 工具页统一的挂载方式：每次软导航先撤掉上一轮监听再重绑，
- * 与 site-chrome / workstation 的生命周期约定保持一致。
+ * 与 site-chrome 的生命周期约定保持一致。
  */
 export function mountTool(setup: (signal: AbortSignal) => void) {
 	let cleanup: (() => void) | undefined;

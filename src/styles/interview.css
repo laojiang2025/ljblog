@@ -1,241 +1,303 @@
-/* 面试题库：列表 + 筛选，配色 token 取自 global.css */
+/**
+ * 面试题库页样式：筛选 chips + 可折叠题目卡片。
+ * 页面结构与筛选脚本（interview.ts）按 data-* 协作，这里只管外观。
+ */
 
 .qa {
-	max-width: 58rem;
+	max-width: 112rem;
 	margin: 0 auto;
-	padding: 2rem 1.25rem 3.5rem;
+	padding: 88px 24px 112px;
+}
+
+.qa__head {
+	max-width: 42rem;
 }
 
 .qa__head h1 {
-	margin: 0 0 0.4rem;
-	font-family: var(--font-display);
-	font-size: clamp(1.5rem, 1.2rem + 1.4vw, 2rem);
-	font-weight: 650;
+	font-size: clamp(2.2rem, 4vw, 3.2rem);
+	font-weight: 700;
 	letter-spacing: -0.02em;
 }
 
 .qa__head p {
-	margin: 0 0 1.5rem;
-	max-width: 42rem;
-	color: var(--ink-soft);
+	margin-top: 12px;
+	font-size: 1.05rem;
+	line-height: 1.7;
+	color: var(--text-muted);
 }
 
-/* ---------- 筛选 ---------- */
+/* ---------- 筛选区 ---------- */
 
 .qa-filters {
 	display: flex;
 	flex-direction: column;
-	gap: 0.6rem;
-	padding: 0.9rem 1rem;
-	border: 1px solid var(--line);
-	border-radius: 13px;
-	background: var(--bg-elevated);
+	gap: 16px;
+	margin-top: 40px;
+	padding: 24px 26px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	background: color-mix(in srgb, var(--surface) 86%, transparent);
+	box-shadow: var(--shadow-sm);
 }
 
 .qa-filters__row {
 	display: flex;
 	align-items: center;
+	gap: 12px;
 	flex-wrap: wrap;
-	gap: 0.45rem;
 }
 
 .qa-filters__label {
-	flex: none;
-	width: 2.6rem;
-	font-size: 0.8rem;
-	color: var(--ink-soft);
+	flex-shrink: 0;
+	width: 2.5rem;
+	font-size: 12px;
+	color: var(--text-faint);
 }
 
 .qa-chips {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.35rem;
+	gap: 6px;
 }
 
 .qa-chip {
-	padding: 0.28rem 0.7rem;
-	border: 1px solid var(--line);
+	padding: 7px 15px;
+	border: 1px solid var(--border);
 	border-radius: 999px;
 	background: var(--bg);
-	color: var(--ink-soft);
-	font-size: 0.82rem;
-	font-family: inherit;
+	font-size: 14px;
+	color: var(--text-muted);
 	cursor: pointer;
+	transition:
+		border-color 0.15s ease,
+		background-color 0.15s ease,
+		color 0.15s ease;
 }
 
 .qa-chip:hover {
-	color: var(--accent);
-	border-color: color-mix(in oklab, var(--accent) 45%, var(--line));
+	border-color: var(--border-strong);
+	color: var(--text);
 }
 
 .qa-chip[aria-pressed='true'] {
+	border-color: var(--accent);
 	background: var(--accent-soft);
-	border-color: color-mix(in oklab, var(--accent) 40%, var(--line));
 	color: var(--accent);
-	font-weight: 560;
+	font-weight: 500;
 }
 
-.qa-filters input[type='search'] {
-	flex: 1 1 12rem;
-	min-width: 0;
-	padding: 0.35rem 0.7rem;
-	border: 1px solid var(--line);
-	border-radius: 999px;
+#qa-search {
+	flex: 1;
+	min-width: 12rem;
+	padding: 11px 14px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-md);
 	background: var(--bg);
-	color: var(--ink);
-	font-family: inherit;
-	font-size: 0.85rem;
+	color: var(--text);
+	font-size: 15px;
+	transition:
+		border-color 0.15s ease,
+		box-shadow 0.15s ease;
+}
+
+#qa-search:focus {
+	outline: none;
+	border-color: var(--accent);
+	box-shadow: 0 0 0 3px var(--accent-soft);
+}
+
+#qa-search::placeholder {
+	color: var(--text-faint);
 }
 
 .qa-count {
-	margin: 0.9rem 0 0.5rem;
-	font-size: 0.8rem;
-	color: var(--ink-soft);
+	margin-top: 20px;
+	font-size: 12px;
+	color: var(--text-faint);
 }
 
 /* ---------- 题目列表 ---------- */
 
 .qa-list {
-	list-style: none;
-	margin: 0;
-	padding: 0;
 	display: flex;
 	flex-direction: column;
-	gap: 0.55rem;
+	gap: 10px;
+	margin-top: 10px;
+	padding: 0;
+	list-style: none;
 }
 
-.qa-item {
-	border: 1px solid var(--line);
-	border-radius: 13px;
-	background: var(--bg-elevated);
-	overflow: hidden;
+.qa-item details {
+	border: 1px solid var(--border);
+	border-radius: var(--radius-lg);
+	background: color-mix(in srgb, var(--surface) 90%, transparent);
+	box-shadow: var(--shadow-sm);
+	transition:
+		border-color 0.15s ease,
+		box-shadow 0.15s ease,
+		transform 0.15s ease;
+}
+
+.qa-item details:hover,
+.qa-item details[open] {
+	border-color: var(--border-strong);
+	box-shadow: var(--shadow-md);
+	transform: translateY(-1px);
 }
 
 .qa-item summary {
 	display: flex;
 	flex-direction: column;
-	gap: 0.4rem;
-	padding: 0.85rem 1rem;
+	gap: 8px;
+	padding: 22px 52px 22px 24px;
 	cursor: pointer;
 	list-style: none;
+	position: relative;
 }
 
 .qa-item summary::-webkit-details-marker {
 	display: none;
 }
 
-.qa-item summary:hover .qa-item__question {
-	color: var(--accent);
+/* 折叠指示箭头，展开时旋转 */
+.qa-item summary::after {
+	content: '';
+	position: absolute;
+	top: 22px;
+	right: 18px;
+	width: 8px;
+	height: 8px;
+	border-right: 1.5px solid var(--text-faint);
+	border-bottom: 1.5px solid var(--text-faint);
+	transform: rotate(45deg);
+	transition: transform 0.15s ease;
+}
+
+.qa-item details[open] summary::after {
+	transform: rotate(-135deg);
 }
 
 .qa-item__meta {
 	display: flex;
 	flex-wrap: wrap;
-	gap: 0.3rem;
+	gap: 6px;
 }
 
 .qa-item__question {
-	font-size: 0.98rem;
-	font-weight: 560;
-	line-height: 1.5;
-}
-
-.qa-item details[open] summary {
-	border-bottom: 1px solid var(--line);
+	font-size: 17px;
+	font-weight: 550;
+	line-height: 1.55;
 }
 
 .qa-tag {
-	padding: 0.05rem 0.45rem;
-	border: 1px solid var(--line);
+	display: inline-flex;
+	align-items: center;
+	padding: 1px 9px;
+	border: 1px solid var(--border);
 	border-radius: 999px;
-	font-size: 0.7rem;
-	font-weight: 400;
-	color: var(--ink-soft);
-	white-space: nowrap;
+	background: var(--surface);
+	font-size: 11.5px;
+	color: var(--text-muted);
 }
 
 .qa-tag--direction {
-	border-color: color-mix(in oklab, var(--accent) 35%, var(--line));
+	border-color: transparent;
 	background: var(--accent-soft);
 	color: var(--accent);
 }
 
-/* 难度用色阶表达，同时保留文字，不单靠颜色传达信息 */
+/* 难度：初级绿 / 中级默认 / 高级红，一眼可分辨 */
 .qa-tag--level-0 {
-	border-color: color-mix(in oklab, #2a9d63 40%, var(--line));
-	color: #248554;
-}
-
-.qa-tag--level-1 {
-	border-color: color-mix(in oklab, #c1670c 40%, var(--line));
-	color: #b0600d;
+	border-color: transparent;
+	background: var(--ok-soft);
+	color: var(--ok);
 }
 
 .qa-tag--level-2 {
-	border-color: color-mix(in oklab, #d1495b 40%, var(--line));
-	color: #bf3f50;
+	border-color: transparent;
+	background: var(--danger-soft);
+	color: var(--danger);
 }
 
-/* ---------- 答案正文 ---------- */
+/* ---------- 参考答案（Markdown 渲染区） ---------- */
 
 .qa-item__answer {
-	padding: 0.9rem 1rem 1.1rem;
-	font-size: 0.9rem;
-	line-height: 1.75;
-	color: var(--ink-soft);
+	padding: 6px 24px 24px;
+	border-top: 1px solid var(--border);
+	font-size: 16px;
+	line-height: 1.8;
+	color: var(--text-muted);
 }
 
 .qa-item__answer > :first-child {
-	margin-top: 0;
+	margin-top: 14px;
 }
 
-.qa-item__answer > :last-child {
-	margin-bottom: 0;
+.qa-item__answer h2,
+.qa-item__answer h3 {
+	margin-top: 20px;
+	font-size: 14px;
+	font-weight: 600;
+	color: var(--text);
+}
+
+.qa-item__answer p,
+.qa-item__answer ul,
+.qa-item__answer ol {
+	margin-top: 10px;
+}
+
+.qa-item__answer ul,
+.qa-item__answer ol {
+	padding-left: 1.4em;
+}
+
+.qa-item__answer li + li {
+	margin-top: 4px;
 }
 
 .qa-item__answer strong {
-	color: var(--ink);
+	color: var(--text);
 }
 
 .qa-item__answer code {
-	padding: 0.05rem 0.3rem;
-	border-radius: 5px;
-	background: var(--bg);
+	padding: 1px 6px;
+	border-radius: 4px;
+	background: var(--surface-hover);
 	font-family: var(--font-mono);
-	font-size: 0.84em;
+	font-size: 0.86em;
+}
+
+.qa-item__answer pre {
+	margin-top: 10px;
+	padding: 12px 14px;
+	border: 1px solid var(--border);
+	border-radius: var(--radius-md);
+	background: var(--surface);
+	overflow: auto;
+}
+
+.qa-item__answer pre code {
+	padding: 0;
+	background: none;
+	font-size: 12.5px;
 }
 
 .qa-item__answer table {
+	margin-top: 10px;
 	width: 100%;
 	border-collapse: collapse;
-	margin: 0.8rem 0;
-	font-size: 0.85rem;
+	font-size: 13px;
 }
 
 .qa-item__answer th,
 .qa-item__answer td {
-	padding: 0.4rem 0.6rem;
-	border: 1px solid var(--line);
+	padding: 6px 10px;
+	border: 1px solid var(--border);
 	text-align: left;
 }
 
-.qa-item__answer th {
-	background: var(--bg);
-	font-weight: 560;
-	color: var(--ink);
-}
-
-.qa-item__answer ol,
-.qa-item__answer ul {
-	padding-left: 1.3rem;
-}
-
-.qa-item__answer li {
-	margin: 0.25rem 0;
-}
-
 .qa-empty {
-	margin: 1.5rem 0;
-	text-align: center;
-	color: var(--ink-soft);
+	margin-top: 24px;
+	color: var(--text-faint);
 }

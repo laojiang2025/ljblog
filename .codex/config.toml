@@ -1,0 +1,80 @@
+[mcp_servers.qtwx-mcp-1]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-1.env]
+QINGTIAN_SESSION = "1"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-2]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-2.env]
+QINGTIAN_SESSION = "2"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-3]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-3.env]
+QINGTIAN_SESSION = "3"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-4]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-4.env]
+QINGTIAN_SESSION = "4"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-5]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-5.env]
+QINGTIAN_SESSION = "5"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-6]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-6.env]
+QINGTIAN_SESSION = "6"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-7]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-7.env]
+QINGTIAN_SESSION = "7"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-8]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-8.env]
+QINGTIAN_SESSION = "8"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"
+
+[mcp_servers.qtwx-mcp-9]
+command = 'D:\node\node.exe'
+args = ["c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/mcp-server/index.mjs"]
+
+[mcp_servers.qtwx-mcp-9.env]
+QINGTIAN_SESSION = "9"
+QINGTIAN_QUEUE_ROOT = "c:/Users/yang/AppData/Roaming/Cursor/User/workspaceStorage/9fa7623b5af246a743b8d04ba7df139f/QingTian.qingtian-v2/runtime/messages"
+QINGTIAN_RUNTIME_STAMP = "c1e79a1949a3"

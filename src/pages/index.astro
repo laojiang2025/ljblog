@@ -1,61 +1,47 @@
 ---
 import { getCollection } from 'astro:content';
 import BaseLayout from '../layouts/BaseLayout.astro';
-import WorkstationSidebar from '../components/workstation/WorkstationSidebar.astro';
-import WorkstationSection from '../components/workstation/WorkstationSection.astro';
-import WorkstationAside from '../components/workstation/WorkstationAside.astro';
-import FloatingDock from '../components/workstation/FloatingDock.astro';
-import { WORKSTATION_SECTIONS, WORKSTATION_STATS } from '../data/workstation';
+import ChannelList from '../components/ChannelList.astro';
+import Icon from '../components/Icon.astro';
+import { READY_TOOLS } from '../data/tools';
+import { RECOMMENDED_TOOLS } from '../data/home';
 import { SITE } from '../consts';
-import '../styles/workstation.css';
 
 const posts = (await getCollection('blog', ({ data }) => !data.draft)).sort(
 	(a, b) => b.data.pubDate.valueOf() - a.data.pubDate.valueOf(),
 );
+const featuredPost = posts[0];
+const latestPosts = posts.slice(1, 4);
+const questions = (await getCollection('interview')).filter((entry) => !entry.data.draft);
 
-const description = '个人工作站：测试工具、面试题库、求职工作台与学习资料的统一入口。';
+const formatDate = (date: Date) =>
+	date.toLocaleDateString('zh-CN', { year: 'numeric', month: 'short', day: 'numeric' });
 ---
 
-<BaseLayout title={SITE.title} description={description} pageKind="workstation">
-	<div class="ws">
-		<WorkstationSidebar />
+<BaseLayout title={SITE.title} description={SITE.description} pageKind="landing">
+	<section class="home-hero border-b border-border" aria-labelledby="hero-title">
+		<div class="mx-auto grid w-full max-w-[1920px] items-center gap-20 px-8 py-20 lg:grid-cols-[1.1fr_0.9fr] lg:px-16 2xl:px-20 lg:py-32">
+			<div>
+				<p class="font-mono text-sm font-semibold tracking-[0.18em] text-accent uppercase"><span class="eyebrow-dot"></span>Personal lab · notes · tools</p>
+				<h1 id="hero-title" class="mt-6 max-w-4xl text-5xl leading-[1.1] font-bold tracking-tight md:text-7xl">我是 {SITE.author}，<br />把测试经验做成可复用的东西。</h1>
+				<p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">这里记录测试开发、AI 工具和工程效率的实践，也整理一些打开即用的小工具。希望每篇文章、每个链接，都能帮你少走一点弯路。</p>
+				<div class="mt-10 flex flex-wrap gap-4"><a class="inline-flex h-13 items-center gap-2 rounded-full bg-foreground px-7 text-base font-medium text-background transition-opacity hover:opacity-85" href="/blog/"><Icon name="book" class="size-5" />先读几篇文章</a><a class="inline-flex h-13 items-center gap-2 rounded-full border border-border bg-surface/70 px-7 text-base font-medium text-foreground transition-colors hover:border-border-strong hover:bg-surface" href="#contact">联系我 <span aria-hidden="true">↗</span></a></div>
+				<ul class="mt-8 flex flex-wrap gap-2" aria-label="关注领域">{SITE.tags.slice(0, 5).map((tag) => <li class="tag-pill">{tag}</li>)}</ul>
+			</div>
 
-		<div class="ws__main">
-			<section class="ws-hero" aria-labelledby="ws-hero-title">
-				<p class="ws-hero__eyebrow">个人工作站</p>
-				<h1 class="ws-hero__title" id="ws-hero-title">工具、题库与笔记，收进同一个入口</h1>
-				<p class="ws-hero__desc">
-					{description}跑在本机的应用只提供入口与启动方式，站内内容随时可读。
-				</p>
-				<ul class="ws-hero__stats">
-					<li>
-						<span class="ws-hero__num">{WORKSTATION_STATS.total}</span>
-						<span class="ws-hero__cap">项收录</span>
-					</li>
-					<li>
-						<span class="ws-hero__num">{WORKSTATION_STATS.live}</span>
-						<span class="ws-hero__cap">项已可用</span>
-					</li>
-					<li>
-						<span class="ws-hero__num">{WORKSTATION_STATS.sections}</span>
-						<span class="ws-hero__cap">个分区</span>
-					</li>
-					<li>
-						<span class="ws-hero__num">{posts.length}</span>
-						<span class="ws-hero__cap">篇笔记</span>
-					</li>
-				</ul>
-			</section>
-
-			{WORKSTATION_SECTIONS.map((section) => <WorkstationSection section={section} />)}
+			<div class="home-hero__signal home-profile-card">
+				<div class="home-profile-card__top"><span class="home-avatar">{SITE.author}</span><span class="home-hero__live"><i></i>持续更新中</span></div>
+				<div class="mt-8"><p class="font-mono text-xs font-semibold tracking-[0.14em] text-faint uppercase">现在在做什么</p><p class="mt-3 text-2xl font-semibold tracking-tight">测试工程 × AI 工作流</p><p class="mt-3 text-base leading-relaxed text-muted">把重复的排查、整理和验证过程，变成工具、清单和更容易读懂的文章。</p></div>
+				<div class="mt-8 grid grid-cols-3 gap-2"><div class="home-mini-stat"><strong>{posts.length}</strong><span>篇文章</span></div><div class="home-mini-stat"><strong>{READY_TOOLS.length}</strong><span>个工具</span></div><div class="home-mini-stat"><strong>{questions.length}</strong><span>道题库</span></div></div>
+			</div>
 		</div>
+	</section>
 
-		<WorkstationAside posts={posts} />
-	</div>
+	<section class="border-b border-border" aria-labelledby="home-posts-title"><div class="mx-auto w-full max-w-[1920px] px-8 py-24 lg:px-16 2xl:px-20 lg:py-32"><div class="flex items-end justify-between gap-4"><div><p class="page-kicker">Writing</p><h2 id="home-posts-title" class="mt-2 text-3xl font-semibold tracking-tight">最近写了什么</h2><p class="mt-2 text-base text-muted">从真实问题出发，记录能复用的判断和方法。</p></div><a class="shrink-0 text-base text-muted transition-colors hover:text-accent" href="/blog/">全部文章 →</a></div>{featuredPost && <div class="mt-10 grid gap-5 lg:grid-cols-[1.15fr_0.85fr]"><a class="home-featured-post group" href={`/blog/${featuredPost.id}/`}><div class="home-featured-post__meta"><span>精选文章</span><time datetime={featuredPost.data.pubDate.toISOString()}>{formatDate(featuredPost.data.pubDate)}</time></div><h3>{featuredPost.data.title}</h3><p>{featuredPost.data.description}</p><span class="home-card-arrow">阅读文章 <span aria-hidden="true">↗</span></span></a><div class="home-latest-posts">{latestPosts.map((post) => <a class="home-latest-post group" href={`/blog/${post.id}/`}><time datetime={post.data.pubDate.toISOString()}>{formatDate(post.data.pubDate)}</time><span><strong>{post.data.title}</strong><small>{post.data.description}</small></span><span class="home-card-arrow" aria-hidden="true">↗</span></a>)}</div></div>}</div></section>
 
-	<FloatingDock />
+	<section class="border-b border-border bg-surface/70" aria-labelledby="home-tools-title"><div class="mx-auto grid w-full max-w-[1920px] gap-20 px-8 py-24 lg:grid-cols-[0.7fr_1.3fr] lg:px-16 2xl:px-20 lg:py-32"><div><p class="page-kicker">Toolbox</p><h2 id="home-tools-title" class="mt-2 text-3xl font-semibold tracking-tight">我做的工具</h2><p class="mt-3 max-w-lg text-base leading-relaxed text-muted">一些解决日常测试琐事的小工具，纯前端运行，输入不会离开你的浏览器。</p><a class="mt-7 inline-flex text-base font-medium text-accent hover:underline" href="/tools/">查看全部工具 →</a></div><div class="grid gap-4 sm:grid-cols-2">{READY_TOOLS.slice(0, 4).map((tool) => <a class="home-tool-card group" href={tool.href}><span class="home-tool-card__icon"><Icon name={tool.icon} class="size-4.5" /></span><span><strong>{tool.name}</strong><small>{tool.summary}</small></span><span class="home-card-arrow" aria-hidden="true">↗</span></a>)}</div></div></section>
+
+	<section class="border-b border-border" aria-labelledby="home-recommended-title"><div class="mx-auto grid w-full max-w-[1920px] gap-20 px-8 py-24 lg:grid-cols-[0.7fr_1.3fr] lg:px-16 2xl:px-20 lg:py-32"><div><p class="page-kicker">Curated links</p><h2 id="home-recommended-title" class="mt-2 text-3xl font-semibold tracking-tight">我常用的工具</h2><p class="mt-3 max-w-lg text-base leading-relaxed text-muted">不重复造轮子，收集真正进入日常工作流的外部工具。</p><a class="mt-7 inline-flex text-base font-medium text-accent hover:underline" href="/about/">了解我的工作流 →</a></div><div class="grid gap-4 sm:grid-cols-2">{RECOMMENDED_TOOLS.map((tool) => <a class="home-recommended-card group" href={tool.href} target="_blank" rel="noopener noreferrer"><span class="home-recommended-card__category">{tool.category}</span><strong>{tool.name}</strong><p>{tool.summary}</p><span class="home-card-arrow" aria-hidden="true">↗</span></a>)}</div></div></section>
+
+	<section id="contact" aria-labelledby="home-contact-title"><div class="mx-auto grid w-full max-w-[1920px] gap-16 px-8 py-24 lg:grid-cols-[0.8fr_1.2fr] lg:px-16 2xl:px-20 lg:py-32"><div><p class="page-kicker">Elsewhere</p><h2 id="home-contact-title" class="mt-2 text-3xl font-semibold tracking-tight">找到我，聊聊你的问题</h2><p class="mt-4 max-w-xl text-base leading-relaxed text-muted">如果你也在做测试开发、AI 工具或效率工作流，欢迎通过这些渠道联系和交流。</p></div><div class="home-contact-card"><ChannelList variant="full" /><a class="mt-6 inline-flex h-11 items-center rounded-full bg-foreground px-6 text-base font-medium text-background transition-opacity hover:opacity-85" href="/about/">查看完整名片 →</a></div></div></section>
 </BaseLayout>
-
-<script>
-	import '../scripts/workstation.ts';
-</script>
