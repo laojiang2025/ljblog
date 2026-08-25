@@ -95,10 +95,16 @@ function bindSpaPageviews() {
 	});
 }
 
+/** 站点代码优先取 consts 配置，其次取构建时环境变量 PUBLIC_BAIDU_ID（部署平台配置即可，无需改代码） */
+function resolveBaiduId(): string {
+	return ANALYTICS.baiduId || String(import.meta.env.PUBLIC_BAIDU_ID ?? '');
+}
+
 export function startAnalytics() {
 	if (window.__analyticsStarted) return;
 	window.__analyticsStarted = true;
-	if (ANALYTICS.baiduId) loadBaidu(ANALYTICS.baiduId);
+	const baiduId = resolveBaiduId();
+	if (baiduId) loadBaidu(baiduId);
 	bindClicks();
 	bindSpaPageviews();
 }
