@@ -10,12 +10,17 @@
     "build": "astro build",
     "preview": "astro preview",
     "astro": "astro",
-    "check:tools": "node --experimental-strip-types --no-warnings scripts/check-tools.mts"
+    "check:tools": "node --experimental-strip-types --no-warnings scripts/check-tools.mts",
+    "og": "node --experimental-strip-types --no-warnings scripts/generate-og.mjs"
   },
   "dependencies": {
     "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
     "@tailwindcss/vite": "^4.3.3",
     "astro": "^7.2.0",
     "tailwindcss": "^4.3.3"
+  },
+  "devDependencies": {
+    "sharp": "^0.35.3"
   }
 }

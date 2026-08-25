@@ -1,8 +1,10 @@
 // @ts-check
 import { defineConfig } from 'astro/config';
 import tailwindcss from '@tailwindcss/vite';
+import sitemap from '@astrojs/sitemap';
 import { access, readdir, readFile, writeFile } from 'node:fs/promises';
 import path from 'node:path';
+import { SITE } from './src/consts';
 
 /**
  * 本地写作台（/admin/）的文件读写端点。
@@ -280,12 +282,13 @@ function adminDesk() {
 
 // https://astro.build/config
 export default defineConfig({
-	site: 'https://example.com',
+	// 域名唯一真源在 src/consts.ts 的 SITE.url，这里只引用不写死
+	site: SITE.url,
 	trailingSlash: 'always',
 	devToolbar: {
 		enabled: false,
 	},
-	integrations: [adminDesk()],
+	integrations: [adminDesk(), sitemap()],
 	// 节点图下线后，旧地址（含已打开的标签页与外部链接）转到接管其内容的关于页
 	// 面试题库栏目暂时下线，旧地址转到文章列表
 	redirects: {
