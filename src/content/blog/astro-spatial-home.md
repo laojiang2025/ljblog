@@ -3,7 +3,6 @@ title: 用 Astro 搭一座可拖拽的个人首页
 description: 从 Spatial Map 思路出发，用 Astro Content Collections 落地资料库与节点图首页。
 pubDate: 2026-08-10
 tags: [Astro, Spatial, 博客]
-download: spatial-home-notes.md
 ---
 
 个人站不一定要「顶栏 + 文章列表」。更有记忆点的做法，是把首页做成一张**可探索的节点图**：人物、最近更新、资料库、频道彼此连线，桌面端拖拽浏览，移动端自动退化成纵向阅读。

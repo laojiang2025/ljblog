@@ -3,7 +3,6 @@ title: 个人知识库的下载资产策略
 description: 把视频/教程配套笔记做成可下载 Markdown，让资料库真正「可带走」。
 pubDate: 2026-08-01
 tags: [知识库, Markdown, 工作流]
-download: download-assets.md
 ---
 
 资料库的价值不只是「能打开」，而是**读者能带走一份干净的笔记**。

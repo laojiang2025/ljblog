@@ -125,27 +125,6 @@
 	color: var(--text-faint);
 }
 
-.article-download {
-	display: inline-flex;
-	align-items: center;
-	height: 32px;
-	padding: 0 14px;
-	border: 1px solid var(--border);
-	border-radius: var(--radius-sm);
-	background: var(--bg);
-	font-size: 13px;
-	font-weight: 500;
-	color: var(--text);
-	transition:
-		border-color 0.15s ease,
-		background-color 0.15s ease;
-}
-
-.article-download:hover {
-	border-color: var(--border-strong);
-	background: var(--surface-hover);
-}
-
 /* ---------- 正文排版 ---------- */
 
 .article-prose {

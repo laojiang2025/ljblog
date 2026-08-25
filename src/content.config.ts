@@ -10,8 +10,6 @@ const blog = defineCollection({
 		pubDate: z.coerce.date(),
 		updatedDate: z.coerce.date().optional(),
 		tags: z.array(z.string()).default([]),
-		/** public/download 下的文件名，可选 */
-		download: z.string().optional(),
 		draft: z.boolean().default(false),
 	}),
 });

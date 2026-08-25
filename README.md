@@ -20,7 +20,7 @@ npm run dev
 - `src/pages/about/`：关于页（个人名片 / 关注渠道 / 分区概览 / 最新笔记）
 - `src/components/SiteFooter.astro` + `ChannelList.astro`：全站页脚与关注渠道，任何页面滑到底都能找到
 - `src/content/blog/`：资料正文（Content Collections）
-- `public/download/`：可下载笔记
+- `download-vault/`：历史下载资产存档（文章已禁止下载，此目录不进构建产物）
 - `src/consts.ts`：品牌 / 关注渠道
 
 ## 构建
