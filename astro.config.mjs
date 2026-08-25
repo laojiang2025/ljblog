@@ -129,7 +129,8 @@ function adminWriter() {
 			server.middlewares.use('/__admin/data', (req, res) => {
 				const url = new URL(req.url ?? '', 'http://localhost');
 				const kind = url.searchParams.get('kind') ?? '';
-				if (!(kind in DATA_KINDS)) return json(res, 400, { ok: false, error: 'kind 应为 products 或 skills' });
+				if (!(kind in DATA_KINDS))
+					return json(res, 400, { ok: false, error: `kind 应为 ${Object.keys(DATA_KINDS).join(' / ')} 之一` });
 				const file = path.join(dataDir, `${kind}.json`);
 
 				if (req.method === 'GET') {
