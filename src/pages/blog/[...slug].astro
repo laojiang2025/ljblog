@@ -19,7 +19,7 @@ const formatDate = (date: Date) =>
 ---
 
 <BaseLayout title={post.data.title} description={post.data.description}>
-	<article class="content-shell">
+	<article class="content-shell" data-content-guard>
 		<header class="article-header">
 			<p class="page-kicker">文章</p>
 			<h1 class="page-title">{post.data.title}</h1>
@@ -31,17 +31,6 @@ const formatDate = (date: Date) =>
 						{formatDate(post.data.pubDate)}
 					</time>
 				</span>
-				{
-					post.data.download && (
-						<a
-							class="article-download"
-							href={`/download/${post.data.download}`}
-							download={post.data.download}
-						>
-							下载笔记
-						</a>
-					)
-				}
 			</div>
 		</header>
 		<div class="article-prose">
@@ -49,3 +38,52 @@ const formatDate = (date: Date) =>
 		</div>
 	</article>
 </BaseLayout>
+
+<style>
+	/* 内容保护：正文与标题不可选中（配合脚本拦截，双层防线） */
+	[data-content-guard] {
+		-webkit-user-select: none;
+		user-select: none;
+		-webkit-touch-callout: none;
+	}
+</style>
+
+<script>
+	/**
+	 * 文章内容保护：拦截复制 / 剪切 / 右键 / 拖拽 / 选区。
+	 * copy 与 cut 绑在 document 上并动态判断当前页是否有受保护文章，
+	 * 以覆盖全选复制，同时兼容 ClientRouter 软导航（离开文章页自动失效）。
+	 */
+	const hasGuardedArticle = () => Boolean(document.querySelector('[data-content-guard]'));
+
+	function bindDocumentGuards() {
+		if ((window as { __contentGuarded?: boolean }).__contentGuarded) return;
+		(window as { __contentGuarded?: boolean }).__contentGuarded = true;
+		for (const type of ['copy', 'cut'] as const) {
+			document.addEventListener(
+				type,
+				(event) => {
+					if (hasGuardedArticle()) event.preventDefault();
+				},
+				{ capture: true },
+			);
+		}
+	}
+
+	function bindArticleGuards() {
+		const article = document.querySelector<HTMLElement>('[data-content-guard]');
+		if (!article || article.dataset.guarded) return;
+		article.dataset.guarded = '1';
+		for (const type of ['contextmenu', 'dragstart', 'selectstart'] as const) {
+			article.addEventListener(type, (event) => event.preventDefault());
+		}
+	}
+
+	function initContentGuard() {
+		bindDocumentGuards();
+		bindArticleGuards();
+	}
+
+	document.addEventListener('astro:page-load', initContentGuard);
+	initContentGuard();
+</script>
