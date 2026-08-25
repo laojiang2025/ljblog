@@ -36,6 +36,8 @@ const ICON_OPTIONS = [
 				[
 					{ id: 'post', label: '写文章' },
 					{ id: 'products', label: '产品' },
+					{ id: 'tools', label: '工具' },
+					{ id: 'courses', label: '课程' },
 					{ id: 'skills', label: 'Skills' },
 					{ id: 'sidebar', label: '侧边栏' },
 				].map((tab, index) => (
@@ -174,6 +176,113 @@ const ICON_OPTIONS = [
 			<section class="mt-12" aria-labelledby="admin-products-title">
 				<h2 id="admin-products-title" class="text-lg font-semibold tracking-tight">已有产品</h2>
 				<ul class="mt-4 divide-y divide-border" data-products-list>
+					<li class="py-3 text-sm text-faint">加载中…</li>
+				</ul>
+			</section>
+		</section>
+
+		<!-- ── 工具 ─────────────────────────── -->
+		<section data-admin-panel="tools" hidden>
+			<p class="mt-8 rounded-[14px] border border-border bg-surface-hover px-4 py-3 text-sm text-muted">
+				这里维护「在线工具」列表的展示（名称、简介、图标、顺序、是否可用）。站内工具的页面本身在
+				<code class="font-mono">src/pages/tools/</code>，新增一个全新的站内工具页需要写代码；
+				外部工具直接填 https 链接即可。
+			</p>
+			<form class="mt-6 grid gap-5" data-tools-form>
+				<input type="hidden" name="id" />
+				<div class="grid gap-5 sm:grid-cols-2">
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">工具名称 *</span>
+						<input class="admin-input" name="name" required placeholder="JSON 格式化" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">简介 *</span>
+						<input class="admin-input" name="summary" required placeholder="一句话说明它做什么" autocomplete="off" />
+					</label>
+				</div>
+				<div class="grid gap-5 sm:grid-cols-3">
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">状态</span>
+						<select class="admin-input" name="status">
+							<option value="ready" selected>可用</option>
+							<option value="pending">开发中</option>
+						</select>
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">链接<span class="ml-1 font-normal text-faint">（可用状态必填）</span></span>
+						<input class="admin-input font-mono" name="href" placeholder="/tools/json/ 或 https://…" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">图标</span>
+						<select class="admin-input font-mono" name="icon">
+							{ICON_OPTIONS.map((icon) => <option value={icon}>{icon}</option>)}
+						</select>
+					</label>
+				</div>
+				<div class="flex flex-wrap items-center gap-4">
+					<button class="admin-btn" type="submit" data-tools-submit>新增工具</button>
+					<button class="admin-btn-ghost hidden" type="button" data-tools-cancel>取消编辑</button>
+					<p class="text-sm" data-tools-status role="status"></p>
+				</div>
+			</form>
+
+			<section class="mt-12" aria-labelledby="admin-tools-title">
+				<h2 id="admin-tools-title" class="text-lg font-semibold tracking-tight">当前工具</h2>
+				<ul class="mt-4 divide-y divide-border" data-tools-list>
+					<li class="py-3 text-sm text-faint">加载中…</li>
+				</ul>
+			</section>
+		</section>
+
+		<!-- ── 课程 ─────────────────────────── -->
+		<section data-admin-panel="courses" hidden>
+			<form class="mt-8 grid gap-5" data-courses-form>
+				<input type="hidden" name="id" />
+				<div class="grid gap-5 sm:grid-cols-2">
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">课程名称 *</span>
+						<input class="admin-input" name="name" required placeholder="AI 驱动的接口测试实战" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">一句话卖点 *</span>
+						<input class="admin-input" name="tagline" required placeholder="学完能独立搭建 AI 测试工作流" autocomplete="off" />
+					</label>
+				</div>
+				<label class="grid gap-1.5">
+					<span class="text-sm font-medium">课程说明</span>
+					<input class="admin-input" name="description" placeholder="内容大纲、适合人群，一两句话" autocomplete="off" />
+				</label>
+				<div class="grid gap-5 sm:grid-cols-4">
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">状态</span>
+						<select class="admin-input" name="status">
+							<option value="live">已上线</option>
+							<option value="prep" selected>筹备中</option>
+						</select>
+					</label>
+					<label class="grid gap-1.5 sm:col-span-2">
+						<span class="text-sm font-medium">报名 / 学习链接<span class="ml-1 font-normal text-faint">（上线必填）</span></span>
+						<input class="admin-input font-mono" name="href" placeholder="https://…" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">价格<span class="ml-1 font-normal text-faint">（可留空）</span></span>
+						<input class="admin-input font-mono" name="price" placeholder="￥199 / 免费" autocomplete="off" />
+					</label>
+				</div>
+				<label class="grid gap-1.5">
+					<span class="text-sm font-medium">标签<span class="ml-1 font-normal text-faint">（逗号分隔）</span></span>
+					<input class="admin-input" name="tags" placeholder="AI 测试, 实战" autocomplete="off" />
+				</label>
+				<div class="flex flex-wrap items-center gap-4">
+					<button class="admin-btn" type="submit" data-courses-submit>新增课程</button>
+					<button class="admin-btn-ghost hidden" type="button" data-courses-cancel>取消编辑</button>
+					<p class="text-sm" data-courses-status role="status"></p>
+				</div>
+			</form>
+
+			<section class="mt-12" aria-labelledby="admin-courses-title">
+				<h2 id="admin-courses-title" class="text-lg font-semibold tracking-tight">当前课程</h2>
+				<ul class="mt-4 divide-y divide-border" data-courses-list>
 					<li class="py-3 text-sm text-faint">加载中…</li>
 				</ul>
 			</section>
@@ -634,6 +743,24 @@ const ICON_OPTIONS = [
 			updateLabel: '保存修改',
 			rowHtml: (item) =>
 				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}${item.repo ? '<span class="ml-2 font-mono text-xs text-accent">repo ✓</span>' : '<span class="ml-2 font-mono text-xs text-faint">无仓库</span>'}</span><span class="block truncate text-[13px] text-muted">${esc(item.summary)}</span></span>`,
+		});
+
+		setupManager({
+			kind: 'tools',
+			fields: ['name', 'summary', 'status', 'href', 'icon'],
+			addLabel: '新增工具',
+			updateLabel: '保存修改',
+			rowHtml: (item) =>
+				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}<span class="ml-2 font-mono text-xs ${item.status === 'ready' ? 'text-accent' : 'text-faint'}">${item.status === 'ready' ? 'ready' : 'pending'}</span></span><span class="block truncate text-[13px] text-muted">${esc(item.summary)}</span></span>`,
+		});
+
+		setupManager({
+			kind: 'courses',
+			fields: ['name', 'tagline', 'description', 'status', 'href', 'price', 'tags'],
+			addLabel: '新增课程',
+			updateLabel: '保存修改',
+			rowHtml: (item) =>
+				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}<span class="ml-2 font-mono text-xs ${item.status === 'live' ? 'text-accent' : 'text-faint'}">${item.status === 'live' ? 'live' : 'coming'}</span>${item.price ? `<span class="ml-2 font-mono text-xs text-muted">${esc(item.price)}</span>` : ''}</span><span class="block truncate text-[13px] text-muted">${esc(item.tagline)}</span></span>`,
 		});
 
 		const sidebarTypeLabel: Record<string, string> = { link: '链接', panel: '弹出面板', top: '回顶部' };

@@ -70,6 +70,40 @@ function adminWriter() {
 						tags: strList(item.tags),
 					};
 				},
+				tools: (/** @type {any} */ item, /** @type {number} */ i) => {
+					const name = str(item.name);
+					const summary = str(item.summary);
+					if (!name || !summary) throw new Error(`第 ${i + 1} 个工具缺少名称或简介`);
+					const status = item.status === 'ready' ? 'ready' : 'pending';
+					const href = str(item.href);
+					if (status === 'ready' && !href) throw new Error(`工具「${name}」是可用状态，必须填链接`);
+					return {
+						id: str(item.id) || `tool-${Date.now()}-${i}`,
+						name,
+						summary,
+						icon: ICON_NAMES.includes(item.icon) ? item.icon : 'flask',
+						status,
+						href,
+					};
+				},
+				courses: (/** @type {any} */ item, /** @type {number} */ i) => {
+					const name = str(item.name);
+					const tagline = str(item.tagline);
+					if (!name || !tagline) throw new Error(`第 ${i + 1} 门课程缺少名称或一句话卖点`);
+					const status = item.status === 'live' ? 'live' : 'prep';
+					const href = str(item.href);
+					if (status === 'live' && !href) throw new Error(`课程「${name}」已上线，必须填报名/学习链接`);
+					return {
+						id: str(item.id) || `course-${Date.now()}-${i}`,
+						name,
+						tagline,
+						description: str(item.description),
+						status,
+						href,
+						price: str(item.price),
+						tags: strList(item.tags),
+					};
+				},
 				sidebar: (/** @type {any} */ item, /** @type {number} */ i) => {
 					const label = str(item.label);
 					if (!label) throw new Error(`第 ${i + 1} 个侧边栏条目缺少名称`);

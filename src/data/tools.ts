@@ -1,6 +1,7 @@
 import type { IconName } from './icons';
+import raw from './tools.json';
 
-/** ready 的工具已内联进本站可直接用，pending 的仍在从本地 testtool 迁移 */
+/** ready 的工具可直接使用；pending 的仍在开发或迁移，列表降级展示 */
 export type ToolStatus = 'ready' | 'pending';
 
 export interface ToolMeta {
@@ -9,60 +10,16 @@ export interface ToolMeta {
 	summary: string;
 	icon: IconName;
 	status: ToolStatus;
-	/** 仅 ready 的工具有独立路由 */
+	/** 站内路由（/tools/xxx/）或站外地址；pending 可留空 */
 	href?: string;
 }
 
-export const TOOLS: readonly ToolMeta[] = [
-	{
-		id: 'json',
-		name: 'JSON 格式化',
-		summary: '校验、美化、压缩 JSON，错误直接定位到行列。',
-		icon: 'braces',
-		status: 'ready',
-		href: '/tools/json/',
-	},
-	{
-		id: 'timestamp',
-		name: '时间戳转换',
-		summary: '秒与毫秒时间戳、日期字符串双向转换，含常用相对时间。',
-		icon: 'clock',
-		status: 'ready',
-		href: '/tools/timestamp/',
-	},
-	{
-		id: 'url',
-		name: 'URL 解析',
-		summary: '拆解协议、主机、路径与查询参数，支持编解码。',
-		icon: 'link',
-		status: 'ready',
-		href: '/tools/url/',
-	},
-	{
-		id: 'person',
-		name: '人员数据生成',
-		summary: '批量生成姓名、身份证、手机号、银行卡等测试数据，校验位可用。',
-		icon: 'resume',
-		status: 'ready',
-		href: '/tools/person/',
-	},
-	{
-		id: 'text',
-		name: '文本处理',
-		summary: '统计、大小写、去重、排序、清洗与随机文本生成。',
-		icon: 'book',
-		status: 'ready',
-		href: '/tools/text/',
-	},
-	{
-		id: 'diff',
-		name: '文本差异对比',
-		summary: '逐行比对两段文本，标出新增与删除并给出相似度。',
-		icon: 'diff',
-		status: 'ready',
-		href: '/tools/diff/',
-	},
-];
+/**
+ * 在线工具清单：工具页与首页共用。
+ * 数据存放在 tools.json，可在本地写作台（/admin/）的「工具」页签维护。
+ * 注意：站内工具的页面路由在 src/pages/tools/ 下，这里只管列表展示。
+ */
+export const TOOLS = raw as readonly ToolMeta[];
 
 export const READY_TOOLS = TOOLS.filter(
 	(tool): tool is ToolMeta & { href: string } => tool.status === 'ready' && Boolean(tool.href),

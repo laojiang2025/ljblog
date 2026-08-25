@@ -1,0 +1,22 @@
+[
+	{
+		"id": "placeholder-course-1",
+		"name": "AI 测试课程占位 · 待替换",
+		"tagline": "把你的第一门课程信息发给我，这张卡片就换成它",
+		"description": "需要：课程名称、一句话卖点、课程大纲要点、价格（可选）、报名/学习链接。",
+		"status": "prep",
+		"href": "",
+		"price": "",
+		"tags": ["待补充"]
+	},
+	{
+		"id": "placeholder-course-2",
+		"name": "课程占位 · 待替换",
+		"tagline": "第二门课程的位置，数量不限",
+		"description": "课程数据在写作台「课程」页签或 src/data/courses.json 里维护，支持排序。",
+		"status": "prep",
+		"href": "",
+		"price": "",
+		"tags": ["待补充"]
+	}
+]

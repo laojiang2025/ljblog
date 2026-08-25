@@ -33,7 +33,20 @@ export interface NavItem {
 export const PRIMARY_NAV: readonly NavItem[] = [
 	{ id: 'home', label: '首页', href: '/' },
 	{ id: 'products', label: '产品', href: '/products/' },
+	{ id: 'tools', label: '在线工具', href: '/tools/' },
+	{ id: 'courses', label: 'AI 课程', href: '/courses/' },
 	{ id: 'skills', label: 'Skills', href: '/skills/' },
 	{ id: 'blog', label: '文章', href: '/blog/' },
 	{ id: 'about', label: '关于', href: '/about/' },
 ];
+
+/**
+ * 站点统计 / 埋点配置。
+ * baiduId：百度统计的站点代码（hm.js?后面那串），留空则不加载统计脚本，
+ * 点击埋点会降级为本地调试模式（console + window.__analyticsQueue）。
+ */
+export const ANALYTICS = {
+	baiduId: '',
+	/** true 时在控制台打印每条埋点，便于本地验证 */
+	debug: import.meta.env.DEV,
+};
