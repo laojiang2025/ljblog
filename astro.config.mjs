@@ -98,6 +98,8 @@ function adminWriter() {
 						name,
 						tagline,
 						description: str(item.description),
+						category: str(item.category) || '课程',
+						cover: str(item.cover),
 						status,
 						href,
 						price: str(item.price),

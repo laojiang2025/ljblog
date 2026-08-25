@@ -269,10 +269,20 @@ const ICON_OPTIONS = [
 						<input class="admin-input font-mono" name="price" placeholder="￥199 / 免费" autocomplete="off" />
 					</label>
 				</div>
-				<label class="grid gap-1.5">
-					<span class="text-sm font-medium">标签<span class="ml-1 font-normal text-faint">（逗号分隔）</span></span>
-					<input class="admin-input" name="tags" placeholder="AI 测试, 实战" autocomplete="off" />
-				</label>
+				<div class="grid gap-5 sm:grid-cols-3">
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">分类<span class="ml-1 font-normal text-faint">（筛选按钮按分类自动生成）</span></span>
+						<input class="admin-input" name="category" placeholder="训练营 / 专栏 / 1V1 咨询" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">封面图<span class="ml-1 font-normal text-faint">（public/ 下路径，可留空）</span></span>
+						<input class="admin-input font-mono" name="cover" placeholder="/covers/ai-camp.png" autocomplete="off" />
+					</label>
+					<label class="grid gap-1.5">
+						<span class="text-sm font-medium">标签<span class="ml-1 font-normal text-faint">（逗号分隔）</span></span>
+						<input class="admin-input" name="tags" placeholder="AI 测试, 实战" autocomplete="off" />
+					</label>
+				</div>
 				<div class="flex flex-wrap items-center gap-4">
 					<button class="admin-btn" type="submit" data-courses-submit>新增课程</button>
 					<button class="admin-btn-ghost hidden" type="button" data-courses-cancel>取消编辑</button>
@@ -756,11 +766,11 @@ const ICON_OPTIONS = [
 
 		setupManager({
 			kind: 'courses',
-			fields: ['name', 'tagline', 'description', 'status', 'href', 'price', 'tags'],
+			fields: ['name', 'tagline', 'description', 'category', 'cover', 'status', 'href', 'price', 'tags'],
 			addLabel: '新增课程',
 			updateLabel: '保存修改',
 			rowHtml: (item) =>
-				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}<span class="ml-2 font-mono text-xs ${item.status === 'live' ? 'text-accent' : 'text-faint'}">${item.status === 'live' ? 'live' : 'coming'}</span>${item.price ? `<span class="ml-2 font-mono text-xs text-muted">${esc(item.price)}</span>` : ''}</span><span class="block truncate text-[13px] text-muted">${esc(item.tagline)}</span></span>`,
+				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}<span class="ml-2 font-mono text-xs text-muted">${esc(item.category ?? '')}</span><span class="ml-2 font-mono text-xs ${item.status === 'live' ? 'text-accent' : 'text-faint'}">${item.status === 'live' ? 'live' : 'coming'}</span>${item.price ? `<span class="ml-2 font-mono text-xs text-muted">${esc(item.price)}</span>` : ''}</span><span class="block truncate text-[13px] text-muted">${esc(item.tagline)}</span></span>`,
 		});
 
 		const sidebarTypeLabel: Record<string, string> = { link: '链接', panel: '弹出面板', top: '回顶部' };

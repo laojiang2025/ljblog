@@ -5,67 +5,221 @@ import { COURSES } from '../../data/courses';
 import { SITE } from '../../consts';
 import '../../styles/content.css';
 
-const description = `${SITE.author} 的 AI 测试课程：把测试工程与 AI 工作流的实战经验做成体系化课程。`;
+const description = `${SITE.author} 的 AI 测试课程中心：精选课程与实战项目，助力职业成长。`;
+const categories = [...new Set(COURSES.map((course) => course.category).filter(Boolean))];
 ---
 
 <BaseLayout title="AI 课程" description={description} pageKind="landing">
 	<div class="content-shell content-shell--wide">
-		<p class="page-kicker">AI Testing Courses</p>
-		<h1 class="page-title">AI 测试课程</h1>
-		<p class="page-lead">
-			把测试工程与 AI 工作流的实战经验，整理成可以跟着做的体系化课程。已上线的可以直接报名，筹备中的会陆续开放。
-		</p>
+		<header class="rounded-[24px] border border-border bg-surface/85 p-8 shadow-(--shadow-sm)">
+			<p class="page-kicker"><Icon name="play" class="mr-1.5 inline size-4 align-[-2px]" />Course Center</p>
+			<h1 class="page-title">课程中心</h1>
+			<p class="page-lead">精选 AI 测试课程与实战项目，助力你的职业成长之路。</p>
+		</header>
 
-		<div class="mt-10 grid gap-4 sm:grid-cols-2">
+		<div class="mt-8">
+			<p class="font-mono text-xs tracking-[0.14em] text-faint uppercase">课程分类</p>
+			<div class="mt-3 flex flex-wrap gap-2" data-course-filters>
+				<button class="course-chip" type="button" data-course-filter="" aria-pressed="true">全部</button>
+				{
+					categories.map((category) => (
+						<button class="course-chip" type="button" data-course-filter={category} aria-pressed="false">
+							{category}
+						</button>
+					))
+				}
+			</div>
+		</div>
+
+		<div class="archive-search mt-5">
+			<label class="sr-only" for="course-query">搜索课程</label>
+			<input id="course-query" type="search" placeholder="搜索课程名称、标签…" data-course-query autocomplete="off" />
+		</div>
+
+		<div class="mt-8 grid gap-5 sm:grid-cols-2 lg:grid-cols-3" data-course-list>
 			{
 				COURSES.map((course) => {
 					const isLive = course.status === 'live' && course.href;
+					const external = /^https?:\/\//.test(course.href ?? '');
 					const card = (
 						<>
-							<div class="flex items-start justify-between gap-3">
-								<span class="inline-grid size-11 place-items-center rounded-[11px] bg-accent-soft text-accent">
-									<Icon name="play" class="size-5" />
-								</span>
-								<span class="flex items-center gap-2">
-									{course.price && <span class="font-mono text-sm font-semibold text-accent">{course.price}</span>}
-									<span
-										class={`rounded-full px-2.5 py-1 font-mono text-[11px] font-semibold tracking-[0.08em] uppercase ${
-											isLive ? 'bg-accent-soft text-accent' : 'bg-surface-hover text-faint'
-										}`}
-									>
-										{isLive ? 'Live' : 'Coming'}
+							<div class="course-card__cover">
+								{course.cover ? (
+									<img src={course.cover} alt={course.name} loading="lazy" />
+								) : (
+									<span class="course-card__cover-fallback" aria-hidden="true">
+										{course.name.slice(0, 6)}
 									</span>
+								)}
+								<span class="course-card__badge">{course.category}</span>
+								<span
+									class={`course-card__status ${isLive ? 'course-card__status--live' : ''}`}
+								>
+									{isLive ? '已上线' : '筹备中'}
 								</span>
 							</div>
-							<h2 class="mt-4 text-xl font-semibold tracking-tight">{course.name}</h2>
-							<p class="mt-1.5 text-base font-medium text-muted">{course.tagline}</p>
-							<p class="mt-2.5 text-[15px] leading-relaxed text-muted">{course.description}</p>
-							<div class="mt-4 flex flex-wrap items-center gap-1.5">
-								{course.tags.map((tag) => (
-									<span class="tag-pill">{tag}</span>
-								))}
+							<div class="flex flex-1 flex-col p-5">
+								<h2 class="text-lg font-semibold tracking-tight">{course.name}</h2>
+								<p class="mt-1.5 text-[15px] font-medium text-muted">{course.tagline}</p>
+								<p class="mt-2 flex-1 text-sm leading-relaxed text-muted">{course.description}</p>
+								<div class="mt-4 flex items-center justify-between gap-3">
+									<span class="flex flex-wrap gap-1.5">
+										{course.tags.slice(0, 3).map((tag) => (
+											<span class="tag-pill">{tag}</span>
+										))}
+									</span>
+									{course.price ? (
+										<span class="shrink-0 font-mono text-base font-semibold text-accent">{course.price}</span>
+									) : null}
+								</div>
+								{isLive && <span class="home-card-arrow mt-3 inline-flex">开始学习 <span aria-hidden="true">↗</span></span>}
 							</div>
-							{isLive && <span class="home-card-arrow mt-4 inline-flex">开始学习 <span aria-hidden="true">↗</span></span>}
 						</>
 					);
 					const cardClass =
-						'group flex flex-col rounded-[20px] border border-border bg-surface/85 p-6 shadow-(--shadow-sm)';
+						'course-card group flex flex-col overflow-hidden rounded-[20px] border border-border bg-surface/85 shadow-(--shadow-sm)';
+					const searchText = `${course.name} ${course.tagline} ${course.tags.join(' ')} ${course.category}`;
 					return isLive ? (
 						<a
 							class={`${cardClass} transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-(--shadow-md)`}
 							href={course.href}
-							target={/^https?:\/\//.test(course.href ?? '') ? '_blank' : undefined}
-							rel={/^https?:\/\//.test(course.href ?? '') ? 'noopener noreferrer' : undefined}
+							target={external ? '_blank' : undefined}
+							rel={external ? 'noopener noreferrer' : undefined}
+							data-course-item
+							data-category={course.category}
+							data-search={searchText}
 						>
 							{card}
 						</a>
 					) : (
-						<article class={`${cardClass} opacity-80`}>{card}</article>
+						<article class={`${cardClass} opacity-90`} data-course-item data-category={course.category} data-search={searchText}>
+							{card}
+						</article>
 					);
 				})
 			}
 		</div>
+		<p class="mt-8 hidden text-sm text-faint" data-course-empty>没有匹配的课程，换个分类或关键词试试。</p>
 
-		<p class="mt-10 text-sm text-faint">课程筹备期间想聊需求或提前占座？去<a class="underline" href="/about/">关于页</a>找到联系方式。</p>
+		<p class="mt-10 text-sm text-faint">
+			课程筹备期间想聊需求或提前占座？去<a class="underline" href="/about/">关于页</a>找到联系方式。
+		</p>
 	</div>
 </BaseLayout>
+
+<style>
+	.course-chip {
+		padding: 0.45rem 1.1rem;
+		border: 1px solid var(--border);
+		border-radius: 9999px;
+		background: color-mix(in srgb, var(--surface) 88%, transparent);
+		font-size: 14px;
+		color: var(--text-muted);
+		cursor: pointer;
+		transition:
+			color 0.15s ease,
+			border-color 0.15s ease,
+			background 0.15s ease;
+	}
+	.course-chip:hover {
+		border-color: var(--border-strong);
+		color: var(--text);
+	}
+	.course-chip[aria-pressed='true'] {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: var(--bg);
+	}
+	.course-card__cover {
+		position: relative;
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: linear-gradient(135deg, var(--accent-soft), color-mix(in srgb, var(--accent) 24%, var(--surface)));
+	}
+	.course-card__cover img {
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		transition: transform 0.25s ease;
+	}
+	.course-card:hover .course-card__cover img {
+		transform: scale(1.04);
+	}
+	.course-card__cover-fallback {
+		position: absolute;
+		inset: 0;
+		display: grid;
+		place-items: center;
+		font-size: 1.5rem;
+		font-weight: 650;
+		letter-spacing: 0.05em;
+		color: var(--accent);
+		opacity: 0.75;
+	}
+	.course-card__badge {
+		position: absolute;
+		top: 0.7rem;
+		left: 0.7rem;
+		padding: 0.25rem 0.7rem;
+		border-radius: 9999px;
+		background: color-mix(in srgb, var(--bg) 82%, transparent);
+		backdrop-filter: blur(6px);
+		font-size: 12px;
+		font-weight: 600;
+		color: var(--text);
+	}
+	.course-card__status {
+		position: absolute;
+		top: 0.7rem;
+		right: 0.7rem;
+		padding: 0.25rem 0.7rem;
+		border-radius: 9999px;
+		background: color-mix(in srgb, var(--bg) 82%, transparent);
+		backdrop-filter: blur(6px);
+		font-size: 12px;
+		color: var(--text-muted);
+	}
+	.course-card__status--live {
+		color: var(--accent);
+		font-weight: 600;
+	}
+</style>
+
+<script>
+	function initCourseFilters() {
+		const list = document.querySelector<HTMLElement>('[data-course-list]');
+		if (!list || list.dataset.bound) return;
+		list.dataset.bound = '1';
+
+		const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-course-filter]')];
+		const items = [...list.querySelectorAll<HTMLElement>('[data-course-item]')];
+		const query = document.querySelector<HTMLInputElement>('[data-course-query]');
+		const empty = document.querySelector<HTMLElement>('[data-course-empty]');
+		let activeCategory = '';
+
+		const apply = () => {
+			const q = (query?.value ?? '').trim().toLowerCase();
+			let visible = 0;
+			for (const item of items) {
+				const matchCategory = !activeCategory || item.dataset.category === activeCategory;
+				const matchQuery = !q || (item.dataset.search ?? '').toLowerCase().includes(q);
+				const show = matchCategory && matchQuery;
+				item.hidden = !show;
+				if (show) visible += 1;
+			}
+			empty?.classList.toggle('hidden', visible > 0);
+		};
+
+		for (const chip of chips) {
+			chip.addEventListener('click', () => {
+				activeCategory = chip.dataset.courseFilter ?? '';
+				chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+				apply();
+			});
+		}
+		query?.addEventListener('input', apply);
+	}
+
+	document.addEventListener('astro:page-load', initCourseFilters);
+	initCourseFilters();
+</script>
