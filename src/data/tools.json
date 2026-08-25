@@ -5,7 +5,8 @@
 		"summary": "校验、美化、压缩 JSON，错误直接定位到行列。",
 		"icon": "braces",
 		"status": "ready",
-		"href": "/tools/json/"
+		"href": "/tools/json/",
+		"category": "数据处理"
 	},
 	{
 		"id": "timestamp",
@@ -13,7 +14,8 @@
 		"summary": "秒与毫秒时间戳、日期字符串双向转换，含常用相对时间。",
 		"icon": "clock",
 		"status": "ready",
-		"href": "/tools/timestamp/"
+		"href": "/tools/timestamp/",
+		"category": "转换解析"
 	},
 	{
 		"id": "url",
@@ -21,7 +23,8 @@
 		"summary": "拆解协议、主机、路径与查询参数，支持编解码。",
 		"icon": "link",
 		"status": "ready",
-		"href": "/tools/url/"
+		"href": "/tools/url/",
+		"category": "转换解析"
 	},
 	{
 		"id": "person",
@@ -29,7 +32,8 @@
 		"summary": "批量生成姓名、身份证、手机号、银行卡等测试数据，校验位可用。",
 		"icon": "resume",
 		"status": "ready",
-		"href": "/tools/person/"
+		"href": "/tools/person/",
+		"category": "测试造数"
 	},
 	{
 		"id": "text",
@@ -37,7 +41,8 @@
 		"summary": "统计、大小写、去重、排序、清洗与随机文本生成。",
 		"icon": "book",
 		"status": "ready",
-		"href": "/tools/text/"
+		"href": "/tools/text/",
+		"category": "数据处理"
 	},
 	{
 		"id": "diff",
@@ -45,6 +50,7 @@
 		"summary": "逐行比对两段文本，标出新增与删除并给出相似度。",
 		"icon": "diff",
 		"status": "ready",
-		"href": "/tools/diff/"
+		"href": "/tools/diff/",
+		"category": "数据处理"
 	}
 ]

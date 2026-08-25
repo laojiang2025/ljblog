@@ -210,15 +210,15 @@ const ICON_OPTIONS = [
 						</select>
 					</label>
 					<label class="grid gap-1.5">
-						<span class="text-sm font-medium">链接<span class="ml-1 font-normal text-faint">（可用状态必填）</span></span>
+						<span class="text-sm font-medium">分类</span>
 						<input
-							class="admin-input font-mono"
-							name="href"
-							placeholder="点下方站内页面，或填 https://…"
+							class="admin-input"
+							name="category"
+							placeholder="数据处理 / 转换解析 / 测试造数…"
 							autocomplete="off"
-							list="admin-tool-pages"
+							list="admin-tool-categories"
 						/>
-						<datalist id="admin-tool-pages"></datalist>
+						<datalist id="admin-tool-categories"></datalist>
 					</label>
 					<label class="grid gap-1.5">
 						<span class="text-sm font-medium">图标</span>
@@ -227,6 +227,17 @@ const ICON_OPTIONS = [
 						</select>
 					</label>
 				</div>
+				<label class="grid gap-1.5">
+					<span class="text-sm font-medium">链接<span class="ml-1 font-normal text-faint">（可用状态必填）</span></span>
+					<input
+						class="admin-input font-mono"
+						name="href"
+						placeholder="点下方站内页面，或填 https://…"
+						autocomplete="off"
+						list="admin-tool-pages"
+					/>
+					<datalist id="admin-tool-pages"></datalist>
+				</label>
 				<div class="flex flex-wrap items-center gap-2 text-sm" data-tool-pages>
 					<span class="text-faint">站内可选：</span>
 					<span class="text-faint">加载中…</span>
@@ -611,16 +622,18 @@ const ICON_OPTIONS = [
 
 		loadPosts();
 
-		/* ── 产品 / Skills 数据管理 ── */
+		/* ── 产品 / Skills / 工具 / 课程 / 侧边栏 数据管理 ── */
 		interface ManagerConfig {
-			kind: 'products' | 'skills';
+			kind: 'products' | 'skills' | 'tools' | 'courses' | 'sidebar';
 			fields: string[];
 			addLabel: string;
 			updateLabel: string;
 			rowHtml: (item: Dict) => string;
+			/** 列表加载或保存成功后回调，用于联动界面（如分类候选） */
+			afterLoad?: (items: Dict[]) => void;
 		}
 
-		function setupManager({ kind, fields, addLabel, updateLabel, rowHtml }: ManagerConfig) {
+		function setupManager({ kind, fields, addLabel, updateLabel, rowHtml, afterLoad }: ManagerConfig) {
 			const mForm = document.querySelector<HTMLFormElement>(`[data-${kind}-form]`)!;
 			const listEl = document.querySelector<HTMLElement>(`[data-${kind}-list]`)!;
 			const mStatus = document.querySelector<HTMLElement>(`[data-${kind}-status]`)!;
@@ -702,6 +715,7 @@ const ICON_OPTIONS = [
 					if (!data.ok) throw new Error(data.error);
 					items = next;
 					render();
+					afterLoad?.(items);
 					setStatus(mStatus, `${okText}（共 ${data.count} 条，已写入 ${data.file}）`, 'ok');
 					return true;
 				} catch (e) {
@@ -742,6 +756,7 @@ const ICON_OPTIONS = [
 					if (!data.ok) throw new Error(data.error);
 					items = data.items;
 					render();
+					afterLoad?.(items);
 				} catch {
 					markOffline();
 					listEl.innerHTML = '<li class="py-3 text-sm text-faint">dev 服务不可用，无法读取数据。</li>';
@@ -769,11 +784,17 @@ const ICON_OPTIONS = [
 
 		setupManager({
 			kind: 'tools',
-			fields: ['name', 'summary', 'status', 'href', 'icon'],
+			fields: ['name', 'summary', 'status', 'category', 'href', 'icon'],
 			addLabel: '新增工具',
 			updateLabel: '保存修改',
 			rowHtml: (item) =>
-				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}<span class="ml-2 font-mono text-xs ${item.status === 'ready' ? 'text-accent' : 'text-faint'}">${item.status === 'ready' ? 'ready' : 'pending'}</span></span><span class="block truncate text-[13px] text-muted">${esc(item.summary)}</span></span>`,
+				`<span class="min-w-0"><span class="block truncate text-sm font-medium">${esc(item.name)}<span class="ml-2 rounded-full border border-border px-2 py-px text-xs text-muted">${esc(item.category || '通用')}</span><span class="ml-2 font-mono text-xs ${item.status === 'ready' ? 'text-accent' : 'text-faint'}">${item.status === 'ready' ? 'ready' : 'pending'}</span></span><span class="block truncate text-[13px] text-muted">${esc(item.summary)}</span></span>`,
+			afterLoad: (items) => {
+				const dl = document.querySelector<HTMLDataListElement>('#admin-tool-categories');
+				if (!dl) return;
+				const cats = [...new Set(items.map((i) => String(i.category ?? '').trim()).filter(Boolean))];
+				dl.innerHTML = cats.map((c) => `<option value="${esc(c)}"></option>`).join('');
+			},
 		});
 
 		// 站内工具页扫描：datalist 提供输入建议，「站内可选」一键填入链接

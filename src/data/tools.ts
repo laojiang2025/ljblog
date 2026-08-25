@@ -12,6 +12,8 @@ export interface ToolMeta {
 	status: ToolStatus;
 	/** 站内路由（/tools/xxx/）或站外地址；pending 可留空 */
 	href?: string;
+	/** 分类，用于工具页的筛选条；不填归入「通用」 */
+	category?: string;
 }
 
 /**

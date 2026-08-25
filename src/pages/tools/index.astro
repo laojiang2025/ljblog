@@ -5,6 +5,8 @@ import { TOOLS } from '../../data/tools';
 
 const ready = TOOLS.filter((tool) => tool.status === 'ready').length;
 const pending = TOOLS.length - ready;
+const categoryOf = (category?: string) => category?.trim() || '通用';
+const categories = [...new Set(TOOLS.map((tool) => categoryOf(tool.category)))];
 ---
 
 <BaseLayout
@@ -23,7 +25,22 @@ const pending = TOOLS.length - ready;
 			</p>
 		</header>
 
-		<div class="mt-10 grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+		{
+			categories.length > 1 && (
+				<div class="mt-10 flex flex-wrap gap-2" data-tool-filters>
+					<button class="tool-chip" type="button" data-tool-filter="" aria-pressed="true">
+						全部
+					</button>
+					{categories.map((category) => (
+						<button class="tool-chip" type="button" data-tool-filter={category} aria-pressed="false">
+							{category}
+						</button>
+					))}
+				</div>
+			)
+		}
+
+		<div class="mt-8 grid gap-4 sm:grid-cols-2 lg:grid-cols-3" data-tool-list>
 			{
 				TOOLS.map((tool) => {
 					const body = (
@@ -37,21 +54,30 @@ const pending = TOOLS.length - ready;
 									{tool.summary}
 								</span>
 							</span>
+							<span class="tag-pill pointer-events-none absolute right-3 bottom-3 hidden sm:inline-flex">
+								{categoryOf(tool.category)}
+							</span>
 						</>
 					);
 
 					const external = /^https?:\/\//.test(tool.href ?? '');
 					return tool.href ? (
 						<a
-							class="group flex items-start gap-4 rounded-[18px] border border-border bg-background/85 p-5 shadow-(--shadow-sm) transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-(--shadow-md)"
+							class="group relative flex items-start gap-4 rounded-[18px] border border-border bg-background/85 p-5 pb-8 shadow-(--shadow-sm) transition-all hover:-translate-y-1 hover:border-border-strong hover:shadow-(--shadow-md)"
 							href={tool.href}
 							target={external ? '_blank' : undefined}
 							rel={external ? 'noopener noreferrer' : undefined}
+							data-tool-item
+							data-category={categoryOf(tool.category)}
 						>
 							{body}
 						</a>
 					) : (
-						<div class="relative flex items-start gap-4 rounded-lg border border-dashed border-border p-5 opacity-70">
+						<div
+							class="relative flex items-start gap-4 rounded-lg border border-dashed border-border p-5 pb-8 opacity-70"
+							data-tool-item
+							data-category={categoryOf(tool.category)}
+						>
 							{body}
 							<span class="tag-pill absolute top-3 right-3">迁移中</span>
 						</div>
@@ -59,5 +85,60 @@ const pending = TOOLS.length - ready;
 				})
 			}
 		</div>
+		<p class="mt-8 hidden text-sm text-faint" data-tool-empty>这个分类下暂时没有工具。</p>
 	</div>
 </BaseLayout>
+
+<style>
+	.tool-chip {
+		padding: 0.45rem 1.1rem;
+		border: 1px solid var(--border);
+		border-radius: 9999px;
+		background: color-mix(in srgb, var(--surface) 88%, transparent);
+		font-size: 14px;
+		color: var(--text-muted);
+		cursor: pointer;
+		transition:
+			color 0.15s ease,
+			border-color 0.15s ease,
+			background 0.15s ease;
+	}
+	.tool-chip:hover {
+		border-color: var(--border-strong);
+		color: var(--text);
+	}
+	.tool-chip[aria-pressed='true'] {
+		background: var(--accent);
+		border-color: var(--accent);
+		color: var(--bg);
+	}
+</style>
+
+<script>
+	function initToolFilters() {
+		const list = document.querySelector<HTMLElement>('[data-tool-list]');
+		if (!list || list.dataset.bound) return;
+		list.dataset.bound = '1';
+
+		const chips = [...document.querySelectorAll<HTMLButtonElement>('[data-tool-filter]')];
+		const items = [...list.querySelectorAll<HTMLElement>('[data-tool-item]')];
+		const empty = document.querySelector<HTMLElement>('[data-tool-empty]');
+
+		for (const chip of chips) {
+			chip.addEventListener('click', () => {
+				const active = chip.dataset.toolFilter ?? '';
+				chips.forEach((c) => c.setAttribute('aria-pressed', String(c === chip)));
+				let visible = 0;
+				for (const item of items) {
+					const show = !active || item.dataset.category === active;
+					item.hidden = !show;
+					if (show) visible += 1;
+				}
+				empty?.classList.toggle('hidden', visible > 0);
+			});
+		}
+	}
+
+	document.addEventListener('astro:page-load', initToolFilters);
+	initToolFilters();
+</script>

@@ -84,6 +84,7 @@ function adminWriter() {
 						icon: ICON_NAMES.includes(item.icon) ? item.icon : 'flask',
 						status,
 						href,
+						category: str(item.category) || '通用',
 					};
 				},
 				courses: (/** @type {any} */ item, /** @type {number} */ i) => {
