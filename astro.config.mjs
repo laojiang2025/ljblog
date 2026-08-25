@@ -157,6 +157,23 @@ function adminWriter() {
 				});
 			});
 
+			// 列出站内已有的工具页面（src/pages/tools/*.astro），供工具页签选择链接
+			server.middlewares.use('/__admin/toolpages', async (req, res) => {
+				if (req.method !== 'GET') return json(res, 405, { ok: false, error: '仅支持 GET' });
+				try {
+					const toolsDir = path.resolve(server.config.root, 'src/pages/tools');
+					const pages = (await readdir(toolsDir))
+						.filter((f) => f.endsWith('.astro') && f !== 'index.astro')
+						.map((f) => {
+							const name = f.replace(/\.astro$/, '');
+							return { route: `/tools/${name}/`, file: `src/pages/tools/${f}` };
+						});
+					json(res, 200, { ok: true, pages });
+				} catch (e) {
+					json(res, 500, { ok: false, error: String((e && e.message) || e) });
+				}
+			});
+
 			// 列出已有文章（slug + 标题），供写作台展示与编辑入口
 			server.middlewares.use('/__admin/posts', async (req, res) => {
 				if (req.method !== 'GET') return json(res, 405, { ok: false, error: '仅支持 GET' });
